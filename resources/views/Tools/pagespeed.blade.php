@@ -19,7 +19,6 @@
         <div id="spinner">
           <input type="text" name="" class="form-control" value="" id="url" placeholder="@lang('pagespeed.input-hint')">
         </div>
-<<<<<<< HEAD
       </div>
       <div class="col-lg-2 mb-5">
         <button type="button" class="btn btn-success form-control" name="button" id="analysis-button">@lang('pagespeed.btn-analysis')!</button>
@@ -64,17 +63,6 @@
               <div class="progress-value" style="width:100%">
                 <div class="value-accessibility">
                   0%
-=======
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-10 mb-5">
-                    <div id="spinner">
-                        <input type="text" name="" class="form-control" value="" id="url" placeholder="Input Your URL">
-                    </div>
-                </div>
-                <div class="col-lg-2 mb-5">
-                    <button type="button" class="btn btn-success form-control" name="button" id="analysis-button">Analysis!</button>
->>>>>>> origin/master
                 </div>
               </div>
             </div>
@@ -630,11 +618,6 @@
 <script src="{{asset('js/logic/pagespeed.js')}}"></script>
 @endpush
 
-<<<<<<< HEAD
 @section('page-speed')
 active
-=======
-@section('home')
-    active
->>>>>>> origin/master
 @endsection

@@ -119,7 +119,6 @@ class ToolsController extends Controller
         return view('Tools/pagespeed', compact('local', 'dataID', 'dataEN'));
     }
 
-<<<<<<< HEAD
     public function mobiletest($lang)
     {
       $dataID = $this->getBlogWordpressId();
@@ -138,8 +137,6 @@ class ToolsController extends Controller
       return view('Tools/sitemap', compact('local', 'dataID', 'dataEN'));
     }
 
-=======
->>>>>>> origin/master
     public function englishVersion()
     {
         $previous = url()->previous();
@@ -167,10 +164,7 @@ class ToolsController extends Controller
             return \redirect('/id/'.$link);
         }
     }
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> origin/master
 }

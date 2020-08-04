@@ -33,19 +33,11 @@
                 @else
                 <a href="https://cmlabs.co/en/" class="mr-3">
                 @endif
-<<<<<<< HEAD
                   <button type="button" class="btn btn-fixed-height" name="button" style="background-color:#32D1FF; color:white">
                     <img alt="Logo" src="{{asset('media/logos/logo-letter-10.png')}}" height="26px" class="mr-1" />
                     cmlabs.co</button>
                 </a>
                 <a href="/construction" class="btn btn-info pulse pulse-light btn-fixed-height">
-=======
-                  <button type="button" class="btn btn-success" name="button">
-                    <img alt="Logo" src="{{asset('media/logos/logo-letter-10.png')}}" height="26px" class="mr-1" />
-                    cmlabs.co</button>
-                </a>
-                <a href="/construction" class="btn btn-primary pulse pulse-light">
->>>>>>> origin/master
                     <div class="pulse pulse-light">
                         <span class="pulse-ring" style="margin: -7px;"></span>
                       <span class="svg-icon svg-icon-light svg-icon-2x">

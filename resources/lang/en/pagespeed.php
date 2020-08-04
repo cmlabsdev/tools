@@ -68,11 +68,7 @@ return [
     "copy-61"=>"Lab records",
     "meta-title" => "Page Speed Test - Site Analysis Tool",
     "meta-desc" => "Use the PageSpeed tool from CMLABS to see the performance, accessibility, SEO and PWA scores from your website.",
-<<<<<<< HEAD
     "meta-keyword" => "google page speed, page speed test, page speed, pagespeed test, page speed tool",
     "subtitle" => "CHECK UP PAGE SPEED AND WEB ISSUES",
     "btn-analysis" => "Analyze"
-=======
-    "meta-keyword" => "google page speed, page speed test, page speed, pagespeed test, page speed tool"
->>>>>>> origin/master
 ];

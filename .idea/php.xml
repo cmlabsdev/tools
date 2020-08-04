@@ -89,7 +89,6 @@
       <path value="$PROJECT_DIR$/vendor/jakub-onderka/php-console-highlighter" />
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
-<<<<<<< HEAD
       <path value="$PROJECT_DIR$/../vendor/symfony/polyfill-php70" />
       <path value="$PROJECT_DIR$/../vendor/symfony/polyfill-intl-normalizer" />
       <path value="$PROJECT_DIR$/../vendor/psr/http-message" />
@@ -97,8 +96,6 @@
       <path value="$PROJECT_DIR$/../vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/../vendor/guzzlehttp/promises" />
       <path value="$PROJECT_DIR$/../vendor/ralouphie/getallheaders" />
-=======
->>>>>>> origin/master
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.2" />
