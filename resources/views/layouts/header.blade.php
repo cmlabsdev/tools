@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 @else
-                <!-- <a href="https://cmlabs.co/en/" class="mr-3"> -->
+                <a href="https://cmlabs.co/en/" class="mr-3">
                 <div class="dropdown dropdown-inline">
                     <a href="#" data-toggle="dropdown" aria-expanded="false" style="margin-right:25px; color: black">
                         Blog & Resource
@@ -96,14 +96,14 @@
                 @endif
 
                 <div class="dropdown mr-3">
-                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right:25px; color: black">
                     @lang('layout.language')
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="/en/version">
+                        <a class="dropdown-item" href="/en/version" style="margin-right:25px; color: black">
                            <span class="ml-1">English</span>
                          </a>
-                        <a class="dropdown-item" href="/id/version">
+                        <a class="dropdown-item" href="/id/version" style="margin-right:25px; color: black">
                            <span class="ml-1">Indonesia</span>
                         </a>
                     </div>

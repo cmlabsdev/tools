@@ -4,7 +4,7 @@
     <div class="card card-custom card-stretch">
       <!--begin::Header-->
       <div class="card-header border-0">
-        <h2 class="card-title font-weight-bolder text-dark">Article from CMLABS</h2>
+        <h3 class="card-title font-weight-bolder text-dark">Article from CMLABS</h3>        
       </div>
       <!--end::Header-->
       <!--begin::Body-->

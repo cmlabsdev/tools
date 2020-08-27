@@ -56,18 +56,17 @@ id
     <div class="row"  data-sticky-container>
         <div class="col-lg-8 mb-5">
             <div class="card card-custom mb-5">
-                <div class="card-body">
+                <div class="card-body"> 
                     <p class="pt-4">
-                        PT CMLABS INDONESIA DIGITAL adalah sebuah perusahaan yang fokus pada jasa SEO, Marketing dan platform pendukung aktifitas SEO.
-                        Umumnya kami menggunakan nama pendek yaitu CMLABS, yang merupakan singkatan dari Content Marketing Labs.
-                        <a href="https://cmlabs.co" style="color: #0095EB"><b>Kunjungi Website</b></a>
+                      @lang('home.desc')
+                        <a href="https://cmlabs.co" style="color: #0095EB"><b>@lang('home.link')</b></a>
                     </p>
                 </div>
             </div>
             <div class="card card-custom mb-5">
                 <div class="card-header border-0">
                   <div class="card-title">
-                     <h2 class="card-label pt-4">Features</h2>
+                     <h2 class="card-label pt-4">@lang('home.feature')</h2>
                    </div>
                   </div>
                 <div class="card-body">
@@ -81,7 +80,7 @@ id
                         <td rowspan="2" width="15%" class="button"><a href="{{'/'.$local.$datum['route']}}" class="btn btn-sm text-white font-weight-bolder text-uppercase form-control" style="background-color: #0095EB">Launch</a></td>
                       </tr>
                       <tr>
-                        <td><a href="{{'/'.$local.$datum['route']}}" class="mr-lg-8 mr-5 mb-lg-0 mb-2" style="color:#0095EB">Lihat Detail</a></td>
+                        <td><a href="{{'/'.$local.$datum['route']}}" class="mr-lg-8 mr-5 mb-lg-0 mb-2" style="color:#0095EB">@lang('home.detail-link')</a></td>
                       </tr>
                     </table>
                     @endforeach
@@ -90,7 +89,7 @@ id
             <div class="card card-custom mb-5">
               <div class="card-header border-0">
                 <div class="card-title">
-                  <h2 class="card-label pt-4">SEO From Contributor</h2>
+                  <h2 class="card-label pt-4">@lang('home.seo-title')</h2>
                 </div>
               </div>
               <div class="card-body">
