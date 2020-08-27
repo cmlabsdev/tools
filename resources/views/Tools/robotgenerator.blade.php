@@ -13,7 +13,12 @@
 @section('id-link','/id/robotstxt-generator')
 
 @section('content')
-
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb" style="background-color:#EEF0F8 !important;">
+    <li class="breadcrumb-item"><a href="/{{$local}}" class="menu-breadcrumb">Homepage</a></li>
+    <li class="breadcrumb-item active" style="color:#2F80ED"><b>Robots.txt Generator</b></li>
+  </ol>
+</nav>
 <div class="row">
   <div class="col-lg-12">
     <!--begin::Card-->

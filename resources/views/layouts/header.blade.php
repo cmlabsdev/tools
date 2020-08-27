@@ -4,7 +4,7 @@
         <!--begin::Left-->
         <div class="d-flex align-items-stretch mr-2">
             <!--begin::Page Title-->
-            @if(request()->path() == "/")
+            @if(request()->path() == "en" || request()->path() == "id")            
             <h1 class="d-none text-dark d-lg-flex align-items-center mr-10 mb-0 h3">@lang('layout.title')</h1>
             @else
             <span class="d-none text-dark d-lg-flex align-items-center mr-10 mb-0 h3">@lang('layout.title')</span>
@@ -19,20 +19,18 @@
 
             <div class="topbar-item">
 
-            @if($local == "id")
-                <a href="/analytics" style="margin-right:25px; color: black;">
-                    Analitik
+                <a href="/analytics" target="_blank">
+                    <div class="analytic-links ml-5 mr-5 font-weight-bold">
+                        @if($local == "id") Analitik 
+                        @else Analytics 
+                        @endif
+                    </div>
                 </a>
-                @else
-                <a href="/analytics" style="margin-right:25px; color: black;">
-                     Analytics
-                </a>
-                @endif
 
                 @if($local == "id")
                 <!-- <a href="https://cmlabs.co/" class="mr-3"> -->
                 <div class="dropdown dropdown-inline">
-                    <a href="#" data-toggle="dropdown" aria-expanded="false" style="margin-right:25px; color: black;">
+                    <a href="#"  class="resource-links ml-5 mr-5 font-weight-boldest" data-toggle="dropdown" aria-expanded="false">
                         Blog & Panduan
                     </a>
                     <div class="dropdown-menu dropdown-menu-md py-5">
@@ -64,7 +62,7 @@
                 @else
                 <a href="https://cmlabs.co/en/" class="mr-3">
                 <div class="dropdown dropdown-inline">
-                    <a href="#" data-toggle="dropdown" aria-expanded="false" style="margin-right:25px; color: black">
+                    <a href="#" class="resource-links ml-5 mr-5 font-weight-bold" data-toggle="dropdown" aria-expanded="false">
                         Blog & Resource
                     </a>
                     <div class="dropdown-menu dropdown-menu-md py-5">

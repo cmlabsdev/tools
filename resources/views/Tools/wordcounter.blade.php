@@ -17,7 +17,7 @@ id/word-counter
 @endsection
 
 @push('style')
-  <style media="screen">
+  <style media="screen">  
   @media only screen and (max-width: 320px) {
     .tulisan {
       font-size: 60%;
@@ -52,6 +52,12 @@ id/word-counter
 @endpush
 
 @section('content')
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb" style="background-color:#EEF0F8 !important;">
+    <li class="breadcrumb-item"><a href="/{{$local}}" class="menu-breadcrumb">Homepage</a></li>
+    <li class="breadcrumb-item active" style="color:#2F80ED"><b>Word Counter</b></li>
+  </ol>
+</nav>
 <div class="row">
   <div class="col-lg-8">
     <!--begin::Card-->

@@ -62126,7 +62126,7 @@ body {
 @media (min-width: 992px) {
   .footer-fixed .footer {
     position: fixed;
-    height: 60px;
+    
     -webkit-box-shadow: 0px 0px 28px 0px rgba(82, 63, 105, 0.13);
     box-shadow: 0px 0px 28px 0px rgba(82, 63, 105, 0.13);
     bottom: 0;

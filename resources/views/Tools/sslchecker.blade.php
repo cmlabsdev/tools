@@ -17,6 +17,12 @@ id/ssl-checker
 @endsection
 
 @section('content')
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb" style="background-color:#EEF0F8 !important;">
+    <li class="breadcrumb-item"><a href="/{{$local}}" class="menu-breadcrumb">Homepage</a></li>
+    <li class="breadcrumb-item active" style="color:#2F80ED"><b>SSL Checker</b></li>
+  </ol>
+</nav>
     <div class="card card-custom mb-5">
         <div class="card-header">
             <div class="card-title">

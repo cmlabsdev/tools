@@ -1,7 +1,8 @@
 .aside {
   background-color: #ffffff;
-  -webkit-box-shadow: 0px 0px 28px 0px rgba(82, 63, 105, 0.08);
-  box-shadow: 0px 0px 28px 0px rgba(82, 63, 105, 0.08); }
+  /* -webkit-box-shadow: 0px 0px 28px 0px rgba(82, 63, 105, 0.08);
+  box-shadow: 0px 0px 28px 0px rgba(82, 63, 105, 0.08);  */
+}
   .aside .aside-menu.ps > .ps__rail-x {
     background-color: transparent; }
     .aside .aside-menu.ps > .ps__rail-x:hover, .aside .aside-menu.ps > .ps__rail-x:focus {

@@ -1,19 +1,36 @@
+@push('style')
+<style media="screen">
+  .aside {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+</style>
+@endpush
+
 <div class="aside aside-left aside-fixed d-flex flex-column flex-row-auto" id="kt_aside">
   <!--begin::Brand-->
   <div class="brand flex-column-auto justify-content-center">
     <!--begin::Logo-->
     <a href="/{{$local}}" class="brand-logo">
-      <img alt="Logo" src="{{asset('media/logos/logo-letter-9.png')}}" class="max-h-30px" />
+      <img alt="Logo" src="{{asset('media/logos/logo-letter-9.png')}}" class="max-h-40px" />
     </a>
     <!--end::Logo-->
   </div>
   <!--end::Brand-->
   <!--begin::Nav Wrapper-->
   <div class="aside-menu-wrapper flex-column-fluid" id="kt_aside_menu_wrapper">
-      <div id="kt_aside_menu" class="aside-menu my-4" data-menu-vertical="1" data-menu-scroll="1" data-menu-dropdown-timeout="500">
+      <div class="logo-mobile text-center pt-10">
+        <a href="/{{$local}}">
+          <img alt="Logo" src="{{asset('media/logos/logo-letter-9.png')}}" class="max-h-40px" />
+        </a>
+      </div>
+      <div id="kt_aside_menu" class="aside-menu footer-fixed" data-menu-vertical="1" data-menu-scroll="1" data-menu-dropdown-timeout="500">
           <!--begin::Nav-->
-        <ul class="menu-nav">
-          <li class="menu-item @yield('home')" aria-haspopup="true">
+        <ul class="menu-nav mb-25">
+            <li class="menu-section mb-5 border-bottom">
+				<span class="h5 text-uppercase">SEO Tools</span>
+			</li>
+          <li class="menu-item mb-5 @yield('home')" aria-haspopup="true">
             <a href="/{{$local}}" class="menu-link">
               <span class="svg-icon menu-icon">
                 <!--begin::Svg Icon-->
@@ -28,7 +45,7 @@
               <span class="menu-text">Overview</span>
             </a>
           </li>
-            <li class="menu-item @yield('word-counter')" aria-haspopup="true">
+            <li class="menu-item mb-5 @yield('word-counter')" aria-haspopup="true">
               <a href="/{{$local}}/word-counter" class="menu-link">
                 <span class="svg-icon menu-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -43,7 +60,7 @@
                 <span class="menu-text">Word Counter</span>
               </a>
             </li>
-            <li class="menu-item @yield('title-checker')">
+            <li class="menu-item mb-5 @yield('title-checker')">
               <a href="/{{$local}}/page-title-meta-description-checker" class="menu-link">
                 <span class="svg-icon menu-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -56,7 +73,7 @@
                 <span class="menu-text">Title & Lengths Checker</span>
               </a>
             </li>
-            <li class="menu-item @yield('json-ld')">
+            <li class="menu-item mb-5 @yield('json-ld')">
               <a href="/{{$local}}/json-ld-faq-schema-generator" class="menu-link">
                 <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon-->
@@ -71,7 +88,7 @@
                 <span class="menu-text">JSON-LD Schema Generator</span>
               </a>
             </li>
-            <li class="menu-item @yield('page-speed')">
+            <li class="menu-item mb-5 @yield('page-speed')">
               <a href="/{{$local}}/page-speed" class="menu-link">
                 <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon-->
@@ -88,7 +105,7 @@
                 <span class="menu-text">Page Speed</span>
               </a>
             </li>
-            <li class="menu-item @yield('sitemap')">
+            <li class="menu-item mb-5 @yield('sitemap')">
               <a href="/{{$local}}/sitemap-generator" class="menu-link">
                 <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon-->
@@ -104,7 +121,7 @@
                 <span class="menu-text">Sitemap Generator</span>
               </a>
             </li>
-            <li class="menu-item @yield('mobile-test')">
+            <li class="menu-item mb-5 @yield('mobile-test')">
               <a href="/{{$local}}/mobile-test" class="menu-link">
                 <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon-->
@@ -119,7 +136,7 @@
                 <span class="menu-text">Mobile Friendly Test</span>
               </a>
             </li>
-            <li class="menu-item @yield('ssl-checker')">
+            <li class="menu-item mb-5 @yield('ssl-checker')">
               <a href="/{{$local}}/ssl-checker" class="menu-link">
                 <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon-->
@@ -136,7 +153,7 @@
                 <span class="menu-text">SSL Checker</span>
               </a>
             </li>
-            <li class="menu-item @yield('robotstxt-generator')">
+            <li class="menu-item mb-5 @yield('robotstxt-generator')">
               <a href="/{{$local}}/robotstxt-generator" class="menu-link">
                 <span class="svg-icon menu-icon">
                   <!--begin::Svg Icon-->
@@ -155,15 +172,8 @@
             </li>
           </ul>
           <!--end::Nav-->
-
-          </div>
+          @include('layouts.footer')
+      </div>
   </div>
   <!--end::Nav Wrapper-->
 </div>
-@push('style')
-<style media="screen">
-  .btn.btn-clean .svg-icon svg g [fill]:hover {
-    fill: #0095EB;
-  }
-</style>
-@endpush

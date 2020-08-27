@@ -30,6 +30,12 @@ id/page-title-meta-description-checker
   }
 </style>
 @endpush
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb" style="background-color:#EEF0F8 !important;">
+    <li class="breadcrumb-item"><a href="/{{$local}}" class="menu-breadcrumb">Homepage</a></li>
+    <li class="breadcrumb-item active" style="color:#2F80ED"><b>Title & Meta Description Checker</b></li>
+  </ol>
+</nav>
 <div class="card card-custom mb-5" id="kt_page_stretched_card">
   <div class="card-header">
     <div class="card-title">

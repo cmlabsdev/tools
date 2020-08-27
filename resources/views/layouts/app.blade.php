@@ -36,6 +36,49 @@
     <link href="{{asset('css/themes/layout/aside/light.css?v=7.0.9')}}" rel="stylesheet" type="text/css"/>
     <link href="{{asset('css/themes/layout/brand/light.css?v=7.0.9')}}" rel="stylesheet" type="text/css"/>
     @stack('style')
+    <style media="screen">
+    .menu-breadcrumb {
+      color: #ABABAB;
+    }
+    .menu-breadcrumb:hover {
+      color: #2F80ED;
+    }
+    a:hover {
+        color: #0095EB !important;
+    }
+      .logo-mobile {
+          display: none;
+      }
+      .analytic-links, .resource-links, .dropdown-toggle, .contributor-title {
+          color: black;
+      }
+      .analytic-links:hover, .resource-links:hover, .dropdown-toggle:hover, .dropdown-item:hover, .burger-icon:focus, .contributor-title:hover {
+          color: #0095EB !important;
+      }
+      .analytic-icon:hover > .svg-icon.svg-menu-icon svg g [fill] {
+          fill: #0095EB !important;
+      }
+      .menu-item.menu-item-active > .menu-link .menu-text, .menu-item:hover > .menu-link .menu-text {
+          color: #0095EB !important;
+      }
+      .menu-item.menu-item-active > .menu-link .svg-icon.menu-icon svg g [fill], .menu-item:hover > .menu-link .svg-icon.menu-icon svg g [fill] {
+          fill: #0095EB !important;
+      }
+      .menu-item.menu-item-active, .menu-item:hover {
+          border-right: 3px solid #0095EB;
+          background: rgba(0, 149, 235, 0.7);
+      }
+      .aside-menu-wrapper > .footer-fixed .footer {
+          left: 0;
+          bottom: 0;
+          width: 265px;
+      }
+      @media only screen and (max-width: 991px) {
+          .logo-mobile {
+              display: block;
+          }
+      }
+    </style>
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <!--end::Global Theme Styles-->
     <!--begin::Layout Themes(used by all pages)-->
@@ -56,21 +99,18 @@
     <!--end::Logo-->
     <!--begin::Toolbar-->
     <div class="d-flex align-items-center">
-        <a href="">
-            <span class="svg-icon svg-icon-xl svg-icon-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                        <rect x="0" y="0" width="24" height="24"></rect>
-						<rect fill="#000000" opacity="0.3" x="13" y="4" width="3" height="16" rx="1.5"></rect>
-						<rect fill="#000000" x="8" y="9" width="3" height="11" rx="1.5"></rect>
-						<rect fill="#000000" x="18" y="11" width="3" height="9" rx="1.5"></rect>
-						<rect fill="#000000" x="3" y="13" width="3" height="7" rx="1.5"></rect>
-	               </g>
-				</svg>
-			</span>
+        <a href="/analytics" class="analytic-icon mr-5" target="_blank">
+          <span class="svg-icon svg-menu-icon svg-icon-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <rect x="0" y="0" width="24" height="24" />
+                <path d="M20,12c-0.249,0-0.483,0.051-0.703,0.133l-2.398-1.963C16.958,9.956,17,9.734,17,9.5C17,8.114,15.886,7,14.5,7 S12,8.114,12,9.5c0,0.396,0.1,0.765,0.262,1.097l-2.909,3.438C9.237,14.015,9.121,14,9,14c-0.179,0-0.348,0.03-0.512,0.074 l-2.563-2.563C5.97,11.348,6,11.179,6,11c0-1.108-0.892-2-2-2s-2,0.892-2,2s0.892,2,2,2c0.179,0,0.348-0.03,0.512-0.074 l2.563,2.563C7.03,15.652,7,15.821,7,16c0,1.108,0.892,2,2,2s2-0.892,2-2c0-0.237-0.048-0.46-0.123-0.671l2.913-3.442 C14.017,11.953,14.252,12,14.5,12c0.411,0,0.792-0.107,1.133-0.281l2.399,1.963C18.016,13.786,18,13.891,18,14c0,1.108,0.892,2,2,2 s2-0.892,2-2S21.108,12,20,12z" fill="#727272"/>
+              </g>
+            </svg>
+          </span>
         </a>
-        <div class="dropdown mr-3">
-            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown mr-5">
+            <button class="btn dropdown-toggle font-weight-bold" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @if($local == "id")
                 ID
                 @else
@@ -129,9 +169,6 @@
                 <!--end::Entry-->
             </div>
             <!--end::Content-->
-            <!--begin::Footer-->
-            @include('layouts.footer')
-            <!--end::Footer-->
         </div>
         <!--end::Wrapper-->
     </div>

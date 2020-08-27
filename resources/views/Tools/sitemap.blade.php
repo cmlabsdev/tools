@@ -17,6 +17,12 @@ id/sitemap-generator
 @endsection
 
 @section('content')
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb" style="background-color:#EEF0F8 !important;">
+    <li class="breadcrumb-item"><a href="/{{$local}}" class="menu-breadcrumb">Homepage</a></li>
+    <li class="breadcrumb-item active" style="color:#2F80ED"><b>Sitemap Generator</b></li>
+  </ol>
+</nav>
 <div class="card card-custom gutter-b">
   <div class="card-header">
     <div class="card-title">
