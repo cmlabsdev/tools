@@ -2344,3 +2344,23 @@ input.input-url-meta-checker:focus{
             padding: 0.65rem 1.1rem !important
     }
 }
+
+.keyword-permutation-text__area {
+    border: none;
+}
+
+.btn-generate-permutation {
+    background-color: var(--primaryblue);
+    border-radius: 20px;
+    color: white;
+}
+
+.btn-generate-permutation:hover {
+    background-color: #037BCB;
+    color: white;
+}
+
+.text-hover-underline:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

@@ -300,6 +300,18 @@ class ToolsController extends Controller
         return view('Tools/keywordresearch', compact('local', 'dataID', 'dataEN', 'is_maintenance'));
     }
 
+    public function keywordpermutation($lang)
+    {
+        App::setLocale($lang);
+        $dataID = $this->HomeController->getBlogWordpressId();
+        $dataEN = $this->HomeController->getBlogWordpressEn();
+        $local = App::getLocale();
+
+        $is_maintenance = in_array('keyword-permutation', explode(',', env('TOOLS_MAINTENANCE'))) && env('APP_ENV') === 'production';
+
+        return view('Tools/keywordpermutation', compact('local', 'dataID', 'dataEN', 'is_maintenance'));
+    }
+
     public function englishVersion()
     {
         $previous = url()->previous();
