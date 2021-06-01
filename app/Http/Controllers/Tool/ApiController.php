@@ -153,7 +153,7 @@ class ApiController extends Controller
             return new BaseApiResource(null, $validator->errors()->first(), 400);
 
         //get all marketing email from json file
-        $emails = json_decode(file_get_contents(base_path('resources/js/json/ctaEmail.json')),true);
+        $emails = explode(',',env("MARKETING_EMAILS", "wisnu.dewa@cmlabs.co"));
 
         //send email to all marketing email
         Mail::bcc($emails)->send(new CtaMail($request->email, $request->mail));
