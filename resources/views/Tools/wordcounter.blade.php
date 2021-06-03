@@ -564,9 +564,12 @@
 @endsection
 
 @push('script')
-    <script src="{{asset('js/logic/predifine-localstorage.js')}}"></script>
-    <script src="{{asset('js/logic/State.js')}}"></script>
-    <script src="{{asset('js/logic/word-counter.js')}}"></script>
+    {{-- <script src="{{asset('js/logic/predifine-localstorage.js')}}"></script>
+    <script src="{{asset('js/logic/State.js')}}"></script> --}}
+    {{-- <script src="{{asset('js/logic/word-counter.js')}}"></script> --}}
+    <script src="{{ mix('js/app/general.js') }} "></script>
+    <script src="{{ mix('js/app/helper.js') }}"></script>
+    <script src="{{ mix('js/app/tools/word-counter.js') }}"></script>
     <script type="application/ld+json">
 	{
 		"@context": "https://schema.org/",

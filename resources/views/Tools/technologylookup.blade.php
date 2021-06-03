@@ -33,7 +33,7 @@ id/technology-lookup
                         <input type="url" class="form-control lookup-url" name="" value="" placeholder="http://example.com" id="input-url" autocomplete="off">
                     </div>
                     <div class="col-sm-4 col-md-3 col-lg-4 col-xl-3 d-flex justify-content-end py-1">
-                        <button id="crawl-btn" type="button" class="btn btn-crawl" name="button" data-toggle="tooltip" data-theme="dark" title="@lang('lookup.lookup-btn-tooltip')">@lang('lookup.lookup-btn')</button>
+                        <button id="analyze-btn" type="button" class="btn btn-crawl" name="button" data-toggle="tooltip" data-theme="dark" title="@lang('lookup.lookup-btn-tooltip')">@lang('lookup.lookup-btn')</button>
                         {{-- <button id="crawlButtonDisabled" type="button" class="btn btn-crawl-disabled" name="button" data-toggle="tooltip" data-theme="dark" title="Currently your are reached the limit!">PLEASE WAIT 59:12</button>--}}
                     </div>
                 </div>
@@ -270,25 +270,13 @@ id/technology-lookup
 @push('script')
 <script type="text/javascript">
     $('#toggle_button_webmaster').click();
-    $('a[href*="#"]:not([href="#"])').click(function() {
-        var offset = -80;
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top + offset
-                }, 400);
-                return false;
-            }
-        }
-    });
 </script>
 <script>
     const LOOKUP_API_URL = '{{ route('api.analyze-technology') }}';
 </script>
-<script src="{{asset('js/logic/technology-lookup.js')}}"></script>
-
+{{-- <script src="{{asset('js/logic/technology-lookup.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/tools/technology-lookup.js') }}"></script>
 <script>
     $(document).ready(function() {
         getHistories();

@@ -1,0 +1,108 @@
+{
+  "bot": [
+    {
+      "name": "All",
+      "value": "*"
+    },
+    {
+      "name": "NinjaBot",
+      "value": "NinjaBot"
+    },
+    {
+      "name": "Googlebot",
+      "value": "Googlebot"
+    },
+    {
+      "name": "Googlebot-Mobile",
+      "value": "Googlebot-Mobile"
+    },
+    {
+      "name": "Googlebot-Image",
+      "value": "Googlebot-Image"
+    },
+    {
+      "name": "Mediapartners-Google",
+      "value": "Mediapartners-Google"
+    },
+    {
+      "name": "Adsbot-Google",
+      "value": "Adsbot-Google"
+    },
+    {
+      "name": "Bingbot",
+      "value": "Bingbot"
+    },
+    {
+      "name": "Slurp",
+      "value": "Slurp"
+    },
+    {
+      "name": "msnbot",
+      "value": "msnbot"
+    },
+    {
+      "name": "msnbot-media",
+      "value": "msnbot-media"
+    },
+    {
+      "name": "Teoma",
+      "value": "Teoma"
+    },
+    {
+      "name": "twiceler",
+      "value": "twiceler"
+    },
+    {
+      "name": "Gigabot",
+      "value": "Gigabot"
+    },
+    {
+      "name": "Scrubby",
+      "value": "Scrubby"
+    },
+    {
+      "name": "Robozilla",
+      "value": "Robozilla"
+    },
+    {
+      "name": "ia_archiver",
+      "value": "ia_archiver"
+    },
+    {
+      "name": "baiduspider",
+      "value": "baiduspider"
+    },
+    {
+      "name": "naverbot",
+      "value": "naverbot"
+    },
+    {
+      "name": "yeti",
+      "value": "yeti"
+    },
+    {
+      "name": "yahoo-mmcrawler",
+      "value": "yahoo-mmcrawler"
+    },
+    {
+      "name": "psbot",
+      "value": "psbot"
+    },
+    {
+      "name": "asterias",
+      "value": "asterias"
+    },
+    {
+      "name": "yahoo-blogs",
+      "value": "yahoo-blogs"
+    },
+    {
+      "name": "Yandex",
+      "value": "Yandex"
+    },
+    {
+      "name": "Specify",
+      "value": "Specify"
+    }
+  ]
+}

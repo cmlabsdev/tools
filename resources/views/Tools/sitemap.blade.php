@@ -325,31 +325,20 @@ id/sitemap-generator
 @endsection
 
 @push('script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/x2js/1.2.0/xml2json.min.js"></script> --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <script>
     const token = "{{csrf_token()}}"
     const URL_API = '{{env('URL_API')}}'
     $('#toggle_button_webmaster').click();
-    $('a[href*="#"]:not([href="#"])').click(function() {
-        var offset = -80;
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top + offset
-                }, 400);
-                return false;
-            }
-        }
-    });
 </script>
-<script src="{{asset('js/logic/download.js')}}"></script>
+{{-- <script src="{{asset('js/logic/download.js')}}"></script>
 <script src="{{asset('js/logic/vkbeautify.0.99.00.beta.js')}}"></script>
-<script src="{{asset('js/logic/trigerEnterButton.js')}}"></script>
-<script src="{{asset('js/logic/sitemap.js')}}"></script>
+<script src="{{asset('js/logic/trigerEnterButton.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/helper.js') }}"></script>
+<script src="{{ mix('js/app/tools/sitemap.js')}}"></script>
 <script type="application/ld+json">
     {
         "@context": "https://schema.org/",

@@ -366,20 +366,6 @@ id/redirect-checker
     const REDIRECT_CHAIN_CHECKER_API_URL = '{{ route('api.analyze-redirect-chain') }}';
     $('#toggle_button_webmaster').click();
 
-    $('a[href*="#"]:not([href="#"])').click(function() {
-        var offset = -80;
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top + offset
-                }, 400);
-                return false;
-            }
-        }
-    });
-
     function myFunction(x) {
         if (x.matches) { // If media query matches
             $('.desktopDate').hide();
@@ -394,7 +380,9 @@ id/redirect-checker
     myFunction(x) // Call listener function at run time
     x.addListener(myFunction) // Attach listener function on state changes
 </script>
-<script src="{{ asset('js/logic/redirect-chain-checker.js') }}"></script>
+{{-- <script src="{{ asset('js/logic/redirect-chain-checker.js') }}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/tools/redirect-chain-checker.js') }}"></script>
 <script>
     $(document).ready(function() {
         getHistories();

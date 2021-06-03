@@ -312,23 +312,13 @@ id/mobile-test
 @endsection
 
 @push('script')
-<script src="{{asset('js/logic/trigerEnterButton.js')}}"></script>
-<script src="{{asset('js/logic/mobiletest.js')}}"></script>
+{{-- <script src="{{asset('js/logic/trigerEnterButton.js')}}"></script> --}}
+{{-- <script src="{{asset('js/logic/mobiletest.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/helper.js') }}"></script>
+<script src="{{ mix('js/app/tools/mobiletest.js') }}"></script>
 <script type="text/javascript">
     $('#toggle_button_webmaster').click();
-    $('a[href*="#"]:not([href="#"])').click(function() {
-        var offset = -80;
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top + offset
-                }, 400);
-                return false;
-            }
-        }
-    });
 </script>
 <script type="application/ld+json">
     {

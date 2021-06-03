@@ -19,21 +19,21 @@ Route::get('/logout','Auth\LoginController@logout');
 Route::middleware([\App\Http\Middleware\ManualAuth::class])->group(function (){
     Route::redirect('/', '/en');
 //Route::resource('/', 'HomeController');
-    Route::get('/analytics', function (){
-        return view('premiumtools');
-    });
-    Route::get('/construction', function (){
-        return redirect('/analytics');
-    });
+    // Route::get('/analytics', function (){
+    //     return view('premiumtools');
+    // });
+    // Route::get('/construction', function (){
+    //     return redirect('/analytics');
+    // });
     Route::get('/url', 'ToolsController@loadssl');
     Route::get('/{lang}','HomeController@index');
-    Route::get('blog/data', 'HomeController@getBlogData');
+    // Route::get('blog/data', 'HomeController@getBlogData');
 
 //Route::get('/test', function (){
 //    return view('/tools/strikethrough');
 //});
 
-    Route::get('/{lang}/strikethrough', 'ToolsController@strikethrough');
+    // Route::get('/{lang}/strikethrough', 'ToolsController@strikethrough');
     Route::get('/{lang}/json-ld-schema-generator', 'ToolsController@jsonld');
     Route::get('/{lang}/json-ld-faq-schema-generator', 'ToolsController@FAQ');
     Route::get('/{lang}/json-ld-breadcrumb-schema-generator', 'ToolsController@breadcrumb');
@@ -44,8 +44,8 @@ Route::middleware([\App\Http\Middleware\ManualAuth::class])->group(function (){
     Route::get('/{lang}/json-ld-recipe-schema-generator', 'ToolsController@recipe');
     Route::get('/{lang}/word-counter', 'ToolsController@wordcounter');
     Route::get('/{lang}/page-title-meta-description-checker', 'ToolsController@metachecker');
-    Route::get('/{lang}/dummy-credit-card-generator', 'ToolsController@creditcard');
-    Route::get('/{lang}/symbol-and-text-generator', 'ToolsController@symbolandtext');
+    // Route::get('/{lang}/dummy-credit-card-generator', 'ToolsController@creditcard');
+    // Route::get('/{lang}/symbol-and-text-generator', 'ToolsController@symbolandtext');
     Route::get('/{lang}/pagespeed-test', 'ToolsController@pagespeed');
     Route::get('/{lang}/sitemap-generator', 'ToolsController@sitemap');
     Route::get('/{lang}/mobile-friendly-test', 'ToolsController@mobiletest');

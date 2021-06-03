@@ -341,8 +341,11 @@ id/json-ld-faq-schema-generator
 </script>
 @endpush
 @push('script')
-<script src="{{asset('js/logic/predifine-localstorage.js')}}"></script>
-<script src="{{asset('js/logic/faq-json-ld.js')}}"></script>
+{{-- <script src="{{asset('js/logic/predifine-localstorage.js')}}"></script> --}}
+{{-- <script src="{{asset('js/logic/faq-json-ld.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/helper.js') }}"></script>
+<script src="{{ mix('js/app/tools/faq-json-ld.js') }}"></script>
 @endpush
 @section('json-ld')
 active
