@@ -159,28 +159,7 @@
 <script>
 
 </script>
-<script type="text/javascript">
-  // var deadline = new Date("dec 1, 2020 12:00:00").getTime();
-  // var x = setInterval(function() {
-  //   var now = new Date().getTime();
-  //   var t = deadline - now;
-  //   var days = Math.floor(t / (1000 * 60 * 60 * 24));
-  //   var hours = Math.floor((t%(1000 * 60 * 60 * 24))/(1000 * 60 * 60));
-  //   var minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
-  //   var seconds = Math.floor((t % (1000 * 60)) / 1000);
-  //   @if($local == "id")
-  //   document.getElementById("countdown").innerHTML = days + "h "
-  //   + hours + "j " + minutes + "m " + seconds + "d ";
-  //   @else
-  //   document.getElementById("countdown").innerHTML = days + "d "
-  //   + hours + "h " + minutes + "m " + seconds + "s ";
-  //   @endif
-  //       if (t < 0) {
-  //           clearInterval(x);
-  //           document.getElementById("countdown").innerHTML = "EXPIRED";
-  //       }
-  //   }, 1000);
-</script>
+<script src="{{asset('js/logic/cta-function.js')}}"></script>
 @stack('script')
 <!--end::Page Scripts-->
 </body>

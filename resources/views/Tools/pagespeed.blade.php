@@ -22,9 +22,40 @@ id/pagespeed-test
     <div class="d-flex flex-column-fluid">
         <div class="container-fluid px-0">
             <h1 class="text-darkgrey font-weight-normal">@lang('pagespeed.title')</h1>
-            <span class="text-darkgrey h4 font-weight-normal">@lang('pagespeed.sub-title')</span>
+            <p class="text-darkgrey h4 font-weight-normal mb-10">@lang('pagespeed.sub-title')</p>
 
-            <div class="header-blue mt-10 mb-5 px-5 py-1">
+            <div class="mb-5" id="cta-good" style="display: none">
+                <div class="cta-yellow px-5 py-1 cta-border-bottom">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-sm-9 col-md-10 col-lg-9 col-xl-10 d-flex align-items-center py-1">
+                            <i class='bx bxs-tachometer bx-md mr-3 text-black'></i>
+                            <p class="mb-0 text-black">Good job! Do you wanna make it 100%? Visit our website and find out for yourself.</p>
+                        </div>
+                        <div class="col-sm-3 col-md-2 col-lg-3 col-xl-2 d-flex justify-content-end py-1">
+                            <a href="https://cmlabs.co/en-id/pricing/seo-consultant" target="_blank" rel="noreferrer nofollow external" type="button" class="btn btn-cta" name="button">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mb-5" id="cta-warning" style="display: none">
+                <div class="cta-yellow px-5 py-1 cta-border-bottom">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-sm-9 col-md-10 col-lg-9 col-xl-10 d-flex align-items-center py-1">
+                            <i class='bx bxs-like bx-md mr-3 text-black'></i>
+                            <p class="mb-0 text-black">Your website is still on the standard speed. To speed up your website, go to this site and get a quote!</p>
+                        </div>
+                        <div class="col-sm-3 col-md-2 col-lg-3 col-xl-2 d-flex justify-content-end py-1">
+                            <a href="https://cmlabs.co/en-id/pricing/seo-consultant" target="_blank" rel="noreferrer nofollow external" type="button" class="btn btn-cta" name="button">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @include('components.cta_form', ["message" => "Ouch! Turns out your website speed is still not good. But you can discuss with us to maximize your website performance."])
+
+            <div class="header-blue mb-5 px-5 py-1">
                 <div class="row d-flex align-items-center">
                     <div class="col-sm-9 col-md-10 col-lg-9 col-xl-10 d-flex align-items-center py-1">
                         <i id="noCrawl" class='bx bxs-shield text-white bx-md mr-3 '></i>

@@ -552,37 +552,49 @@ a:hover {
     border-radius: 10px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05) !important;
 }
+
 .office-footer .office-detail {
     flex: 85%;
 }
+
 .office-footer .office-map {
     flex: 15%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 .office-detail .office-label,
 .office-detail .office-address {
     color: var(--black);
 }
+
 .office-detail .office-hours {
     color: var(--darkgrey);
     transition: .3s;
 }
+
 @media (max-width: 554px) {
     .office-detail {
         margin-bottom: 20px;
     }
 }
+
 .btn-open-map {
     background-color: var(--darkgrey);
     color: var(--white);
     border-radius: 30px;
     transition: .3s;
 }
+
+.btn-open-map:hover {
+    color: var(--black) !important;
+}
+
 .card-footer-office:hover .card-body .office-footer .office-detail .office-hours {
     color: var(--primaryblue);
 }
+
 .card-footer-office:hover .card-body .office-footer .office-map .btn-open-map {
     background-color: var(--primaryblue);
     color: var(--white) !important;
@@ -1051,11 +1063,14 @@ a:hover {
     color: var(--black);
     border-radius: 20px;
     font-weight: bold;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .btn-crawl:hover {
     background: var(--lightgrey);
-    color: var(--black);
+    color: var(--black) !important;
     border-radius: 20px;
     font-weight: bold;
 }
@@ -1457,15 +1472,15 @@ a:hover {
 
 input.input-meta-title,
 textarea.input-meta-description,
-input.input-url-meta-checker{
+input.input-url-meta-checker {
     border: none;
-    border-radius:0px;
+    border-radius: 0px;
     border-bottom: 1px solid white;
 }
 
 input.input-meta-title:focus,
 textarea.input-meta-description:focus,
-input.input-url-meta-checker:focus{
+input.input-url-meta-checker:focus {
     border-bottom: 1px solid white;
 }
 
@@ -2320,7 +2335,7 @@ input.input-url-meta-checker:focus{
     }
 }
 
-@media only screen and (max-width:575px){
+@media only screen and (max-width:575px) {
     .container-maintenance {
         width: 80%;
     }
@@ -2342,69 +2357,68 @@ input.input-url-meta-checker:focus{
 }
 
 @media only screen and (min-width:299px) and (max-width:330px) {
-    button#copy{
-            padding: 0.65rem 1.5rem !important
+    button#copy {
+        padding: 0.65rem 1.5rem !important
     }
 }
 
 @media only screen and (min-width:325px) and (max-width:330px) {
-    button#export{
-            padding: 0.65rem 1.1rem !important
+    button#export {
+        padding: 0.65rem 1.1rem !important
     }
 }
 
 @media only screen and (min-width:281px) and (max-width:330px) {
-    button#test{
-            padding: 0.65rem 1.7rem !important
+    button#test {
+        padding: 0.65rem 1.7rem !important
     }
 }
 
 @media only screen and (min-width:312px) and (max-width:330px) {
-    button#reset{
-            padding: 0.65rem 1.3rem !important
+    button#reset {
+        padding: 0.65rem 1.3rem !important
     }
 }
 
 @media only screen and (min-width:780px) and (max-width:873px) {
-    button#copy{
-            padding: 0.65rem 1.5rem !important
+    button#copy {
+        padding: 0.65rem 1.5rem !important
     }
 }
 
 @media only screen and (min-width:855px) and (max-width:873px) {
-    button#export{
-            padding: 0.65rem 1.1rem !important
+    button#export {
+        padding: 0.65rem 1.1rem !important
     }
 }
 
 @media only screen and (min-width:768px) and (max-width:873px) {
-    button#test{
-            padding: 0.65rem 1.7rem !important
+    button#test {
+        padding: 0.65rem 1.7rem !important
     }
 }
 
 @media only screen and (min-width:816px) and (max-width:873px) {
-    button#reset{
-            padding: 0.65rem 1.3rem !important
-    }
-}
-
-
-@media only screen and (min-width:992px) and (max-width:1199px) {
-    button#copy{
-            padding: 0.65rem 1.3rem !important
+    button#reset {
+        padding: 0.65rem 1.3rem !important
     }
 }
 
 @media only screen and (min-width:992px) and (max-width:1199px) {
-    button#test{
-            padding: 0.65rem 1.7rem !important
+    button#copy {
+        padding: 0.65rem 1.3rem !important
     }
 }
 
 @media only screen and (min-width:992px) and (max-width:1199px) {
-    button#reset{
-            padding: 0.65rem 1.1rem !important
+    button#test {
+        padding: 0.65rem 1.7rem !important
+    }
+}
+
+@media only screen and (min-width:992px) and (max-width:1199px) {
+    button#reset {
+        padding: 0.65rem 1.1rem !important
     }
 }
 
@@ -2426,4 +2440,109 @@ input.input-url-meta-checker:focus{
 .text-hover-underline:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+.cta-green {
+    background: #B1F25D;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.cta-yellow {
+    background: #FBC918;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.cta-red {
+    background: #FF5656;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.cta-grey {
+    background: var(--grey);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.cta-border-bottom {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.text-green {
+    color: #67B405;
+}
+
+.text-yellow {
+    color: #FBC918;
+}
+
+.text-red {
+    color: #FF5656;
+}
+
+.cta-white {
+    background: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.cta-white.border-green {
+    border: 1px solid #84DB15;
+}
+
+.cta-white.border-yellow {
+    border: 1px solid #FBC918;
+}
+
+.cta-white.border-red {
+    border: 1px solid #FF5656;
+}
+
+.btn-cta {
+    height: 60%;
+    width: 100%;
+    background: var(--black);
+    color: white !important;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.btn-cta:hover {
+    background: #191f21;
+    color: white !important;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.btn-cancel-cta {
+    background: var(--lightgrey);
+    color: var(--black);
+    border-radius: 20px;
+    font-weight: bold;
+    width: 80px;
+}
+
+.btn-cancel-cta:hover {
+    background: var(--grey);
+    color: var(--black);
+}
+
+.btn-send-cta {
+    background: var(--primaryblue);
+    color: white;
+    border-radius: 20px;
+    font-weight: bold;
+    width: 80px;
+}
+
+.btn-send-cta:hover {
+    background: #037BCB;
+    color: white;
+}
+
+.z-index-9 {
+    z-index: 9;
 }

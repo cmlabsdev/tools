@@ -60,3 +60,5 @@ Route::middleware([\App\Http\Middleware\ManualAuth::class])->group(function (){
     Route::get('/en/version', 'ToolsController@englishVersion');
     Route::get('/id/version', 'ToolsController@indonesiaVersion');
 });
+
+Route::post('/api/cta', 'Tool\ApiController@ctaEmail')->name('api.cta-email');

@@ -22,8 +22,21 @@ id/hreflang-checker
     <div class="d-flex flex-column-fluid">
         <div class="container-fluid px-0">
             <h1 class="text-darkgrey font-weight-normal">@lang('hreflang.title')</h1>
-            <span class="text-darkgrey h4 font-weight-normal">@lang('hreflang.sub-title')</span>
-            <div class="header-blue mt-10 mb-5 px-5 py-1">
+            <p class="text-darkgrey h4 font-weight-normal mb-10 ">@lang('hreflang.sub-title')</p>
+            <div class="mb-5" id="cta-warning" style="display: none">
+                <div class="cta-yellow px-5 py-1 cta-border-bottom">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-sm-9 col-md-10 col-lg-9 col-xl-10 d-flex align-items-center py-1">
+                            <i class='bx bxs-error bx-md mr-3 text-black'></i>
+                            <p class="mb-0 text-black">We can’t find your hreflang URL. Optimize and fix your issues immediately. If you need help, check out this link</p>
+                        </div>
+                        <div class="col-sm-3 col-md-2 col-lg-3 col-xl-2 d-flex justify-content-end py-1">
+                            <a href="https://cmlabs.co/en-id/pricing/seo-consultant" target="_blank" rel="noreferrer nofollow external" type="button" class="btn btn-cta" name="button">Get Quote</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-blue mb-5 px-5 py-1">
                 <div class="row d-flex align-items-center">
                     <div class="col-sm-9 col-md-10 col-lg-9 col-xl-10 d-flex align-items-center py-1">
                         <i id="empty-url" class='bx bxs-shield text-white bx-md mr-3'></i>

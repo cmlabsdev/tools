@@ -1,4 +1,5 @@
 const LINK_ANALYZER_LOCAL_STORAGE_KEY = 'link-analyzer-history'
+const LINK_ANALYZER_COUNTER_KEY = 'link-analyzer-counter';
 var jqueryRequest = undefined;
 var dataResult = undefined;
 var counter = 1;
@@ -138,6 +139,7 @@ function analyze(_url) {
                     // Render stats value
                     dataResult = res.data;
 
+                    increaseCounter(LINK_ANALYZER_COUNTER_KEY);
                     addHistory(_url, res.data)
                     renderAllData(res.data);
                 } else {
@@ -184,6 +186,9 @@ function renderAllData(data) {
     $('#external-links-value-tab').text(`External Links (${data.external_links.value})`);
     $('#internal-links-value-tab').text(`Internal Links (${data.internal_links.value})`);
     counter = 1;
+    checkCounter(LINK_ANALYZER_COUNTER_KEY, () => {
+        $('#cta-danger').show();
+    })
     renderListOfLinks(10);
 }
 
@@ -378,6 +383,7 @@ $('#local-history-mobile').on('click', '.delete-history--btn', function() {
 
 $('#analyze-btn').click(function() {
     analyze($('#input-url').val());
+    $('#cta-danger').hide();
 })
 
 $('.show-more--btn').click(function() {

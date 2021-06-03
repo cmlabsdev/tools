@@ -7,6 +7,7 @@ if (lang == "en") {
 }
 
 const REDIRECT_CHAIN_CHECKER_LOCAL_STORAGE_KEY = 'redirect-chain-checker-history';
+const REDIRECT_CHAIN_CHECKER_COUNTER_KEY = 'redurect-chain-checker-counter';
 
 const RedirectResultTemplate = (url, status_code, date) => `
 <div class="row px-5">
@@ -139,12 +140,17 @@ function analyze(_url) {
                 }
             },
             error: (err) => {
-                if(err.responseJSON.statusCode === 429){
-                    let {minute, second} = convertSecond(err.responseJSON.data.current_time);
-                    toastr.error(`Please wait for ${minute} minutes and ${second} seconds`, `Error ${err.responseJSON.message}`)
+                if(err.responseJSON){
+                    if(err.responseJSON.statusCode === 429){
+                        let {minute, second} = convertSecond(err.responseJSON.data.current_time);
+                        toastr.error(`Please wait for ${minute} minutes and ${second} seconds`, `Error ${err.responseJSON.message}`)
+                    } else {
+                        toastr.error(err.responseJSON.message, 'Error')
+                    }
                 } else {
-                    toastr.error(err.responseJSON.message, 'Error')
+                    toastr.error(err.statusText, 'Error');
                 }
+
                 $('#redirect-result').hide();
                 $('#redirect-result-empty').show();
             },
@@ -169,6 +175,12 @@ function renderAllData(data){
     $('#redirect-result-container').show();
     $('#redirect-result-empty').hide();
     $('#redirect-result').empty().show();
+    $('#cta-danger').hide();
+
+    if(data.redirects.length > 3) {
+        $('#cta-danger').show();
+    }
+
     for (let redirect of data.redirects) {
         $('#redirect-result').append(
             RedirectResultTemplate(redirect.url, redirect.status, redirect.date)

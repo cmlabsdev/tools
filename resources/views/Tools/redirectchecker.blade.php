@@ -22,9 +22,9 @@ id/redirect-checker
     <div class="d-flex flex-column-fluid">
         <div class="container-fluid px-0">
             <h1 class="text-darkgrey font-weight-normal">@lang('redirectchecker.title')</h1>
-            <span class="text-darkgrey h4 font-weight-normal">@lang('redirectchecker.sub-title')</span>
-
-            <div class="header-blue mt-10 mb-5 px-5 py-1">
+            <p class="text-darkgrey h4 font-weight-normal mb-10">@lang('redirectchecker.sub-title')</p>
+            @include('components.cta_form', ["message" => "Oops, we can’t see your targeted URL. Fix your targeted URL here."])
+            <div class="header-blue mb-5 px-5 py-1">
                 <div class="row d-flex align-items-center">
                     <div class="col-sm-6 col-md-7 col-lg-6 col-xl-7 d-flex align-items-center py-1">
                         <i id="empty-url" class='bx bxs-shield text-white bx-md mr-3'></i>

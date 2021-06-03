@@ -22,8 +22,21 @@
             <div class="d-flex flex-column-fluid">
                 <div class="container-fluid px-0">
                     <h1 class="text-darkgrey font-weight-normal">@lang('wordcounter.title')</h1>
-                    <span class="text-darkgrey h4 font-weight-normal">@lang('wordcounter.subtitle')</span>
-                    <div class="row mt-10">
+                    <p class="text-darkgrey h4 font-weight-normal mb-10">@lang('wordcounter.subtitle')</p>
+                    <div class="mb-5" id="cta-warning" style="display: none">
+                        <div class="cta-yellow px-5 py-1 cta-border-bottom">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-sm-9 col-md-10 col-lg-9 col-xl-10 d-flex align-items-center py-1">
+                                    <i class='bx bxs-file-find bx-md mr-3 text-black'></i>
+                                    <p class="mb-0 text-black">Do you wanna make your articles to be more SEO Friendly? Discuss with us and upgrade your article's performance.</p>
+                                </div>
+                                <div class="col-sm-3 col-md-2 col-lg-3 col-xl-2 d-flex justify-content-end py-1">
+                                    <a href="https://cmlabs.co/en-id/pricing/content-writing" target="_blank" rel="noreferrer nofollow external" type="button" class="btn btn-cta" name="button">Get Quote</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-8">
                             <div class="card card-custom mb-5">
                                 <div class="card-body py-3 px-4">
@@ -116,7 +129,7 @@
                                               placeholder="{{ Lang::get('wordcounter.textarea-placeholder') }}"
                                               rows="15" style="resize:none; overflow:hidden"
                                               class="form-control word-counter-text-area font-size-12px"
-                                              id="textarea"></textarea>
+                                              id="textarea" onpaste="pasteListener()"></textarea>
                                 </div>
                             </div>
                             <div id="local-collection-desktop" class="local-collection word__counter-local">

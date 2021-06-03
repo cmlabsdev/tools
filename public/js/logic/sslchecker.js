@@ -52,8 +52,9 @@ $('#crawlButton').on('click', function() {
             url: url
         },
         success: (response) => {
+            $('#cta-danger').hide()
             if (response.statusCode === 200){
-                renderData(response.data)
+                renderData(response.data, true)
                 save(response.data, url)
                 refreshLocalStorage()
                 toastr.success('Success scan your ssl', 'Success');
@@ -79,7 +80,7 @@ let getData = function(index) {
     renderData(data)
 }
 
-let renderData = function(response) {
+let renderData = function(response, cta = false) {
     if (response) {
         $('#result').empty()
         $('#noCrawlResult').hide()
@@ -89,6 +90,11 @@ let renderData = function(response) {
         let icon;
         let textExpired;
         if (difDate < 0) {
+            if (cta){
+                $('#cta-danger').show()
+            }else {
+                $('#cta-danger').hide()
+            }
             displayText = `SSL Certificate expired on ${expDate.getDate()}th, ${parseMonth(expDate.getMonth()+1)} ${expDate.getFullYear()} (${(Math.abs(difDate)/(1000*3600*24)).toFixed(0)} days ago).`
             icon = `<i class='bx bxs-x-circle bx-md' style="color:#D60404"></i>`
             textExpired = `Your TSL Certificate is expired`

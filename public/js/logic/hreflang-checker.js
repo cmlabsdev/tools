@@ -1,4 +1,5 @@
 const HREFLANG_CHECKER_LOCAL_STORAGE_KEY = 'hreflang-checker-history';
+const HREFLANG_CHECKER_COUNTER_KEY = 'hreflang-checker-counter';
 
 var jqueryRequest = null;
 
@@ -133,6 +134,7 @@ function analyze(_url) {
             },
             success: (res) => {
                 if (res.statusCode === 200) {
+                    increaseCounter(HREFLANG_CHECKER_COUNTER_KEY);
                     updateProgressBar(50);
                     addHistory(_url, res.data);
                     renderAllData(res.data);
@@ -166,24 +168,33 @@ function analyze(_url) {
 }
 
 function renderAllData(data) {
-    if (data.length === 0) {
-        // if no result
-        $('#no-crawl-result').show();
-        return;
-    }
-    $('#hreflang-result-header').removeAttr('style');
     $('#no-crawl-result').hide();
+    $('#cta-warning').hide();
     $("#hreflang-result-list").empty();
     let _counter = 1;
-    for (let _data of data) {
-        $("#hreflang-result-list")
-            .append(
-                HreflangResultTemplate(_counter++,
-                    _data.url,
-                    _data.hreflang,
-                    _data.language ? _data.language.name : 'undefined',
-                    _data.location ? _data.location.name : 'undefined')
-            )
+
+    if(data.length === 0) {
+        // if no result
+        $('#no-crawl-result').show();
+        $('#hreflang-result-list').append(
+            `<p class="text-center d-block">There is no hreflang found</p>`
+        );
+        $('#hreflang-result-header').attr('style', 'display: none !important;');
+        checkCounter(HREFLANG_CHECKER_COUNTER_KEY, () => {
+            $('#cta-warning').show();
+        })
+    } else {
+        $('#hreflang-result-header').removeAttr('style');
+        for (let _data of data) {
+            $("#hreflang-result-list")
+                .append(
+                    HreflangResultTemplate(_counter++,
+                        _data.url,
+                        _data.hreflang,
+                        _data.language ? _data.language.name : 'undefined',
+                        _data.location ? _data.location.name : 'undefined')
+                )
+        }
     }
 }
 

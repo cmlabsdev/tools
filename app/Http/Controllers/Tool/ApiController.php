@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Tool;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\BaseApiResource;
+use App\Mail\CtaMail;
 use Illuminate\Http\Request;
 use App\Traits\ApiHelper;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Mockery\Exception;
 
@@ -23,7 +26,7 @@ class ApiController extends Controller
         $sessionCookie = Cookie::get("tl_session");
         if(!$sessionCookie){
             $sessionCookie = Session::getId();
-            Cookie::forever("tl_session", encrypt($sessionCookie));
+            Cookie::queue(Cookie::forever("tl_session", encrypt($sessionCookie)));
             $cacheKey = "$sessionCookie-$url";
         } else {
             $cacheKey = "$sessionCookie-$url";
@@ -69,7 +72,7 @@ class ApiController extends Controller
         }
 
         $response = $this->requestHreflangChecker($url);
-        return new BaseApiResource($response['data'], $response['statusText'], $response['statusCode']);
+        return new BaseApiResource($response['data'] ?? [], $response['statusText'], $response['statusCode']);
     }
 
     public function analyzeLink(Request $request)
@@ -135,5 +138,27 @@ class ApiController extends Controller
         }catch (Exception $exception){
             return new BaseApiResource($response['data'] ?? null, $response['message'], $response['statusCode']);
         }
+    }
+
+    public function ctaEmail(Request $request)
+    {
+        //make validator for request
+        $validator = Validator::make($request->all(),[
+            "email" => ["required", "email"],
+            "mail" => ["required", "string"]
+        ]);
+
+        //check validation
+        if ($validator->fails())
+            return new BaseApiResource(null, $validator->errors()->first(), 400);
+
+        //get all marketing email from json file
+        $emails = json_decode(file_get_contents(base_path('resources/js/json/ctaEmail.json')),true);
+
+        //send email to all marketing email
+        Mail::bcc($emails)->send(new CtaMail($request->email, $request->mail));
+
+        //return success response
+        return new BaseApiResource(null, "Success send email", 200);
     }
 }

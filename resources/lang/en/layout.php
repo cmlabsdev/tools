@@ -27,6 +27,7 @@ return [
     "footer-resource-link-3" => "cmlabs Blog",
     "footer-resource-link-4" => "Content Writing Tools",
     "footer-resource-link-5" => "SEO Tools",
+    "footer-resource-link-6" => "SERP Tracker Reference",
     "footer-link-1" => "Terms & Condition",
     "footer-link-2" => "Privacy Policy",
     "footer-link-3" => "Disclaimer",

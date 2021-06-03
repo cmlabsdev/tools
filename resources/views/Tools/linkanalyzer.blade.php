@@ -22,8 +22,9 @@ id/link-analyzer
     <div class="d-flex flex-column-fluid">
         <div class="container-fluid px-0">
             <h1 class="text-darkgrey font-weight-normal">@lang('analyzer.title')</h1>
-            <span class="text-darkgrey h4 font-weight-normal">@lang('analyzer.sub-title')</span>
-            <div class="header-blue mt-10 mb-5 px-5 py-1">
+            <p class="text-darkgrey h4 font-weight-normal mb-10">@lang('analyzer.sub-title')</p>
+            @include('components.cta_form', ["message" => "Watch out, your domain giving free backlinks to other domains. Fix your issues and optimize more."])
+            <div class="header-blue mb-5 px-5 py-1">
                 <div class="row d-flex align-items-center">
                     <div class="col-sm-9 col-md-10 col-lg-9 col-xl-10 d-flex align-items-center py-1">
                         <i id="empty-url" class='bx bxs-shield text-white bx-md mr-3'></i>
