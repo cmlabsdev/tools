@@ -42,7 +42,7 @@
                                 <div class="card-body py-3 px-4">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="d-flex align-items-center">
-                                            <i id="copy-text"
+                                            <i id="copy"
                                                class='bx bxs-copy-alt bx-sm mx-2 text-darkgrey text-hover-primaryblue'
                                                data-toggle="tooltip" data-theme="dark"
                                                title="{{ Lang::get('wordcounter.tooltip-copy') }}"></i>
@@ -129,7 +129,7 @@
                                               placeholder="{{ Lang::get('wordcounter.textarea-placeholder') }}"
                                               rows="15" style="resize:none; overflow:hidden"
                                               class="form-control word-counter-text-area font-size-12px"
-                                              id="textarea" onpaste="pasteListener()"></textarea>
+                                              id="json-format" onpaste="pasteListener()"></textarea>
                                 </div>
                             </div>
                             <div id="local-collection-desktop" class="local-collection word__counter-local">

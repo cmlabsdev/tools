@@ -1,3 +1,6 @@
+var WORDS_LENGTH = 0
+var TOP_DENSITY = 0
+
 const refreshLocalStorage = function () {
     try {
         $('#localsavemobile').empty();
@@ -90,15 +93,15 @@ for (let i = 1; i < 6; i++) {
 let prefilled_en = '( text bellow is an example, you can change the example anytime )\n\nCommon Phases In Content Writing\n\nThen, what are the phases in developing a good content writing? Here we have seven common phases that can be applied for online writing. However, these steps must be firstly adjusted to the project objectives since different project may come with different scheme and approach, too. The seven phases are in the following :';
 let prefilled_id = '( teks di bawah ini adalah contoh, Anda dapat mengubah contoh kapan saja )\n\nFase Umum Dalam Penulisan Konten\n\nLalu, apa saja tahapan dalam mengembangkan content writing yang baik? Di sini kami memiliki tujuh fase umum yang dapat diterapkan untuk penulisan online. Namun, langkah-langkah ini harus terlebih dahulu disesuaikan dengan tujuan proyek karena proyek yang berbeda mungkin datang dengan skema dan pendekatan yang berbeda juga. Ketujuh fase tersebut adalah sebagai berikut :';
 
-if ($('#textarea').val() === '') {
+if ($('#json-format').val() === '') {
     if (lang === 'en')
-        $('#textarea').val(prefilled_en);
-    else $('#textarea').val(prefilled_id);
+        $('#json-format').val(prefilled_en);
+    else $('#json-format').val(prefilled_id);
     start();
-} else if ($('#textarea').val() === prefilled_en || $('#textarea').val() === prefilled_id) {
+} else if ($('#json-format').val() === prefilled_en || $('#json-format').val() === prefilled_id) {
     if (lang === 'en')
-        $('#textarea').val(prefilled_en);
-    else $('#textarea').val(prefilled_id);
+        $('#json-format').val(prefilled_en);
+    else $('#json-format').val(prefilled_id);
     start();
 } else {
     start()
@@ -106,7 +109,7 @@ if ($('#textarea').val() === '') {
 
 refreshLocalStorage();
 
-$('#textarea').on('input', function () {
+$('#json-format').on('input', function () {
     if ($('#autosaveParam').data('autosave') == "on") {
         if ($(this).val() || $(this).val() !== '') {
             const key = $(this).data('key');
@@ -119,7 +122,7 @@ $('#textarea').on('input', function () {
                 temp.wc.push(key)
             }
             window.localStorage.setItem('keys', JSON.stringify(temp));
-            window.localStorage.setItem(key, $('#textarea').val());
+            window.localStorage.setItem(key, $('#json-format').val());
         } else {
             const key = $(this).data('key');
             const keys = window.localStorage.getItem('keys')
@@ -138,19 +141,40 @@ $('#textarea').on('input', function () {
     start();
 })
 
+$('#json-format').keypress(function (e) {
+    if (e.key === " ") {
+        saveState()
+    }
+})
+
+$(window).keydown(function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === "z") {
+        $('#json-format').val(State.undo())
+        e.preventDefault()
+    }
+})
+
+const pasteListener = function () {
+    $('#cta-warning').hide()
+    setTimeout(function() {
+        increaseCounter('word-counter-count')
+        checkCounterForWordCounter('word-counter-count', () => showCta())
+    }, 100);
+}
+
 const getData = function (key) {
     if (localStorage.getItem(key)) {
-        $('#textarea').val(localStorage.getItem(key));
-        $('#textarea').data('key', key)
+        $('#json-format').val(localStorage.getItem(key));
+        $('#json-format').data('key', key)
         start();
     }
 }
 
 const removeData = function (key) {
-    let currentKey = $('#textarea').data('key')
+    let currentKey = $('#json-format').data('key')
     if (currentKey === key) {
-        $('#textarea').data('key', new Date().getTime())
-        $('#textarea').val('')
+        $('#json-format').data('key', new Date().getTime())
+        $('#json-format').val('')
         start();
     }
     let keys = JSON.parse(localStorage.getItem('keys'));
@@ -176,8 +200,8 @@ const clearAll = function () {
 }
 
 $('#new-text').click(function () {
-    if ($('#textarea').val()) {
-        const key = $('#textarea').data('key');
+    if ($('#json-format').val()) {
+        const key = $('#json-format').data('key');
         const keys = window.localStorage.getItem('keys')
         var temp = define();
         if (keys) {
@@ -187,16 +211,16 @@ $('#new-text').click(function () {
             temp.wc.push(key)
         }
         window.localStorage.setItem('keys', JSON.stringify(temp));
-        window.localStorage.setItem(key, $('#textarea').val());
+        window.localStorage.setItem(key, $('#json-format').val());
     }
-    $('#textarea').data('key', new Date().getTime())
-    $('#textarea').val('')
+    $('#json-format').data('key', new Date().getTime())
+    $('#json-format').val('')
     refreshLocalStorage();
 })
 
 $('#reset').click(function () {
     sessionStorage.clear();
-    $('#textarea').val('');
+    $('#json-format').val('');
     $('.collapse').collapse('hide');
     start();
 
@@ -220,9 +244,11 @@ function start() {
 
     var words = input.value.replace(/['";:,.?\xbf\-!\xa1]+/g, "").match(/\S+/g);
     if (words) {
-        wordCount.innerHTML = numberWithCommas(words.length);
+        wordCount.innerHTML = words.length;
+        WORDS_LENGTH = words.length
     } else {
         wordCount.innerHTML = 0;
+        WORDS_LENGTH = 0
     }
 
     if (words) {
@@ -287,6 +313,17 @@ function start() {
             sortedKeywords.sort(function (a, b) {
                 return b[1] - a[1]
             });
+
+            let density = 0
+            if (j === 2 || j === 3){
+                if (sortedKeywords[0]){
+                    density = sortedKeywords[0]
+                }
+
+                if (density > TOP_DENSITY)
+                    TOP_DENSITY = density
+            }
+
             topKeyword[j - 1].innerHTML = "";
             for (var i = 0; i < sortedKeywords.length && i < 10; i++) {
                 var div = document.createElement('div');
@@ -404,7 +441,7 @@ function start() {
 }
 
 $(document).ready(function () {
-    $('#textarea').data('key', new Date().getTime())
+    $('#json-format').data('key', new Date().getTime())
 
     $('#autoSaveOff').tooltip({
         'template': '<div class="tooltip tooltip-autosave-off" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>'
@@ -435,38 +472,31 @@ $(document).ready(function () {
         $('#autosaveParam').data('autosave', 'on');
     });
 
-    $("#copy-text").click(function () {
-        const textarea = $('#textarea');
-        textarea.select();
-        document.execCommand("copy");
-        toastr.success('Copied to Clipboard', 'Information');
-    });
-
     $("#set-font-size-18px").click(function () {
         $("#set-font-size-18px").addClass("active");
         $("#set-font-size-12px").removeClass("active");
         $("#set-font-size-15px").removeClass("active");
-        $("#textarea").addClass("font-size-18px");
-        $("#textarea").removeClass("font-size-12px");
-        $("#textarea").removeClass("font-size-15px");
+        $("#json-format").addClass("font-size-18px");
+        $("#json-format").removeClass("font-size-12px");
+        $("#json-format").removeClass("font-size-15px");
     });
 
     $("#set-font-size-12px").click(function () {
         $("#set-font-size-18px").removeClass("active");
         $("#set-font-size-12px").addClass("active");
         $("#set-font-size-15px").removeClass("active");
-        $("#textarea").removeClass("font-size-18px");
-        $("#textarea").addClass("font-size-12px");
-        $("#textarea").removeClass("font-size-15px");
+        $("#json-format").removeClass("font-size-18px");
+        $("#json-format").addClass("font-size-12px");
+        $("#json-format").removeClass("font-size-15px");
     });
 
     $("#set-font-size-15px").click(function () {
         $("#set-font-size-18px").removeClass("active");
         $("#set-font-size-12px").removeClass("active");
         $("#set-font-size-15px").addClass("active");
-        $("#textarea").removeClass("font-size-18px");
-        $("#textarea").removeClass("font-size-12px");
-        $("#textarea").addClass("font-size-15px");
+        $("#json-format").removeClass("font-size-18px");
+        $("#json-format").removeClass("font-size-12px");
+        $("#json-format").addClass("font-size-15px");
     });
 
     $("#showWords1Desktop").click(function () {
@@ -706,8 +736,8 @@ const lastData = function () {
     let data = JSON.parse(localStorage.getItem('keys'))
     if (data.wc.length > 0) {
         if (localStorage.getItem(data.wc[data.wc.length - 1])) {
-            $('#textarea').val(localStorage.getItem(data.wc[data.wc.length - 1]));
-            $('#textarea').data('key', data.wc[data.wc.length - 1])
+            $('#json-format').val(localStorage.getItem(data.wc[data.wc.length - 1]));
+            $('#json-format').data('key', data.wc[data.wc.length - 1])
             start();
         }
     }
@@ -715,6 +745,14 @@ const lastData = function () {
 
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+const showCta = function () {
+    console.log(WORDS_LENGTH)
+    console.log(TOP_DENSITY)
+    if (WORDS_LENGTH > 700 && (TOP_DENSITY < 1 || TOP_DENSITY > 3)){
+        $('#cta-warning').show()
+    }
 }
 
 // var counter = 0;

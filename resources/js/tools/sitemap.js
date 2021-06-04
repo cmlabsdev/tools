@@ -35,7 +35,7 @@ $(document).ready(function () {
         isCanceled = false;
     });
 
-    $('#cancelOn').on('click', function () {
+    $('#cancelOn').click(function () {
         socket.emit('stop');
         cancel(false)
         $("#noCrawlResult").show();

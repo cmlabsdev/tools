@@ -52,9 +52,12 @@ $('#analysis-button').click(function () {
         url: 'https://pagespeedonline.googleapis.com/pagespeedonline/v5/runPagespeed?category=ACCESSIBILITY&category=BEST_PRACTICES&category=PERFORMANCE&category=PWA&category=SEO&url=' + encodeURIComponent('https://' + urlWeb) + '&key=AIzaSyDjg7PenszK_cEZfg4tzvOlKFmnufwxVLs',
         success: function (data) {
             try {
-                saveData(data)
+                increaseCounter('page-speed-counter')
+                closeCta()
                 renderResult(data)
                 refreshLocalStorage();
+                checkCounter('page-speed-counter', () => showCta(data))
+                saveData(data)
             } catch (e) {
                 Swal.close()
                 toastr.error(e)
@@ -76,6 +79,24 @@ $('#analysis-button').click(function () {
         }
     });
 });
+
+function showCta(data) {
+    let score = (data.lighthouseResult.categories.performance.score * 100).toFixed(0);
+    if (score < 50) {
+        $('#cta-danger').show()
+    } else if (score < 90) {
+        $('#cta-warning').show()
+    } else if (score < 100) {
+        $('#cta-good').show()
+    }
+}
+
+function closeCta() {
+    $('#cta-danger').hide()
+    $('#cta-warning').hide()
+    $('#cta-good').hide()
+    $('#notif-form-success').hide()
+}
 
 function renderResult(data) {
     refreshAuditsResult();
@@ -101,7 +122,7 @@ function renderResult(data) {
                 }
             });
         });
-        observer.observe(target[i], {attributes: true});
+        observer.observe(target[i], { attributes: true });
     }
     Swal.close();
 }
@@ -388,21 +409,21 @@ function showAs(audit) {
     switch (audit.scoreDisplayMode) {
         case "manual":
         case "notApplicable":
-            return {label: audit.scoreDisplayMode, status: 'pass', color: 'grey'};
+            return { label: audit.scoreDisplayMode, status: 'pass', color: 'grey' };
         case "error":
         case "informative":
-            return {label: audit.scoreDisplayMode, status: 'fail', color: 'red'};
+            return { label: audit.scoreDisplayMode, status: 'fail', color: 'red' };
         case "numeric":
         case "binary":
         default:
             if (audit.score >= PASS) {
-                return {label: audit.scoreDisplayMode, status: 'pass', color: 'green'};
+                return { label: audit.scoreDisplayMode, status: 'pass', color: 'green' };
             } else if (audit.score >= AVERAGE) {
-                return {label: audit.scoreDisplayMode, status: 'fail', color: 'orange'};
+                return { label: audit.scoreDisplayMode, status: 'fail', color: 'orange' };
             } else if (audit.score >= 0) {
-                return {label: audit.scoreDisplayMode, status: 'fail', color: 'red'};
+                return { label: audit.scoreDisplayMode, status: 'fail', color: 'red' };
             } else {
-                return {label: audit.scoreDisplayMode, status: 'fail', color: 'grey'};
+                return { label: audit.scoreDisplayMode, status: 'fail', color: 'grey' };
             }
     }
 }
@@ -507,7 +528,7 @@ const refreshLocalStorage = function () {
                     $('#localsavemobile').append(div)
                     $('#localsavedesktop').append(div2)
                 }
-            }else {
+            } else {
                 let div2 = `<li id="empty-impression" class="list-group-item list-group-item-action pointer mb-2 border-radius-5px">
                   <div class="d-flex justify-content-center text-center">
                     <span>` + localStorageNone + `</span>
@@ -552,6 +573,7 @@ let removeLocal = function (index) {
 let getData = function (index) {
     let local = JSON.parse(localStorage.getItem('page-speed'))
     $('#url').val(local[index].id)
+    closeCta()
     renderResult(local[index])
 }
 

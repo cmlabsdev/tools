@@ -22,7 +22,8 @@ mix.js('resources/js/app.js', 'public/js')
     .babel([
         'resources/js/localization.js',
         'resources/js/general.js',
-        'resources/js/local-storage.js'
+        'resources/js/local-storage.js',
+        'resources/js/cta-function.js'
     ], 'public/js/app/general.js')
     .babel('resources/js/json/currencies.json', 'public/js/app/json/currencies.json')
     .babel('resources/js/json/province-id.json', 'public/js/app/json/province-id.json')

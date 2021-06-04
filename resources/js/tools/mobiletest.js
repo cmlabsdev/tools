@@ -1,5 +1,6 @@
 const LINK_MOBILE_FRIENDLY_API = "https://searchconsole.googleapis.com/v1/urlTestingTools/mobileFriendlyTest:run?key=AIzaSyAe7AXnQrH6VxQk6wDlg3E7eJuZn9AywC8"
 const LOCAL_STORAGE_KEY = 'mobile-test-history'
+const MOBILE_TEST_COUNTER_KEY = 'mobile-test-counter'
 
 var ic_normal = $('#noCrawl'),
     ic_https = $('#crawlHttps'),
@@ -95,7 +96,8 @@ check_url.click(function () {
         },
         success: function (result) {
             if (result.testStatus.status === 'COMPLETE') {
-                resultdata(result.mobileFriendliness, result.screenshot.data)
+                closeCta()
+                resultdata(result.mobileFriendliness, result.screenshot.data, true)
                 mobileissues(result.mobileFriendlyIssues)
                 resourceissues(result.resourceIssues)
 
@@ -195,7 +197,7 @@ function renderAllData(result) {
     after_crawl_preview.removeClass('d-none')
 }
 
-function resultdata(titledata, imagedata) {
+function resultdata(titledata, imagedata, cta=false) {
     let title, subtitle
 
     mobile_indicator_1.removeClass('d-none')
@@ -212,11 +214,23 @@ function resultdata(titledata, imagedata) {
 
         mobile_indicator_1.addClass('d-none')
         mobile_indicator_2.addClass('d-none')
+        if (cta){
+            increaseCounter(MOBILE_TEST_COUNTER_KEY)
+            checkCounter(MOBILE_TEST_COUNTER_KEY, () => showCta())
+        }else {
+            closeCta()
+        }
     } else if (titledata === 'NOT_MOBILE_FRIENDLY') {
         title = title_not_friendly
         subtitle = subtitle_not_friendly
 
         mobile_indicator_1.addClass('d-none')
+        if (cta){
+            increaseCounter(MOBILE_TEST_COUNTER_KEY)
+            checkCounter(MOBILE_TEST_COUNTER_KEY, () => showCta())
+        }else {
+            closeCta()
+        }
     }
 
     result_title.html(title)
