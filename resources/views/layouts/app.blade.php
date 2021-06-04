@@ -138,7 +138,7 @@
 
 
 <!-- Custom JS -->
-<script src="{{ asset('js/custom.js?v=20210116213500')}}"></script>
+<script src="{{ mix('js/app.js')}}"></script>
 
 <!--end::Global Theme Bundle-->
 <!--begin::Page Vendors(used by this page)-->

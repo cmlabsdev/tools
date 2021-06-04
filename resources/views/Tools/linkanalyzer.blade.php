@@ -368,21 +368,10 @@ id/link-analyzer
 <script>
     const LINK_ANALYZER_API_URL = '{{ route('api.analyze-link') }}';
     $('#toggle_button_webmaster').click();
-    $('.links').click(function() {
-        var offset = -80;
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top + offset
-                }, 400);
-                return false;
-            }
-        }
-    });
 </script>
-<script src="{{ asset('js/logic/link-analyzer.js') }}"></script>
+{{-- <script src="{{ asset('js/logic/link-analyzer.js') }}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/tools/link-analyzer.js') }}"></script>
 <script>
     $(document).ready(function() {
         getHistories();

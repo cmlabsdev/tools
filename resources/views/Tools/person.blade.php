@@ -93,7 +93,7 @@ id/json-ld-person-schema-generator
                                     </div>
                                     <div class="row">
                                         <div class="col-12 mb-5">
-                                            <div class="sosial-profile-url">
+                                            <div class="social-profile-url">
                                             </div>
                                         </div>
                                     </div>
@@ -364,7 +364,9 @@ id/json-ld-person-schema-generator
 </script>
 @endpush
 @push('script')
-<script src="{{asset('js/logic/person-json.js')}}"></script>
+{{-- <script src="{{asset('js/logic/person-json.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js')}} "></script>
+<script src="{{ mix('js/app/tools/person-json.js') }}"></script>
 @endpush
 
 @section('json-ld')

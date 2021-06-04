@@ -312,7 +312,9 @@
 @endsection
 
 @push('script')
-<script src="{{asset('js/logic/robotgenerator.js')}}"></script>
+{{-- <script src="{{asset('js/logic/robotgenerator.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/tools/robotgenerator.js') }}"></script>
 <script type="text/javascript">
     $('#toggle_button_webmaster').click();
 </script>

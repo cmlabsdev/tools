@@ -745,8 +745,11 @@ id/pagespeed-test
     }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
-<script src="{{asset('js/logic/trigerEnterButton.js')}}"></script>
-<script src="{{asset('js/logic/pagespeed.js')}}"></script>
+{{-- <script src="{{asset('js/logic/trigerEnterButton.js')}}"></script> --}}
+{{-- <script src="{{asset('js/logic/pagespeed.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/helper.js') }}"></script>
+<script src="{{ mix('js/app/tools/pagespeed.js') }}"></script>
 <script type="text/javascript">
     $('#toggle_button_webmaster').click();
 </script>

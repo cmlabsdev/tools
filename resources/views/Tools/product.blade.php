@@ -491,7 +491,9 @@ id/json-ld-product-schema-generator
 </script>
 @endpush
 @push('script')
-<script src="{{asset('js/logic/product-json.js')}}"></script>
+{{-- <script src="{{asset('js/logic/product-json.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js')}} "></script>
+<script src="{{ mix('js/app/tools/product-json.js') }}"></script>
 <script src="{{asset('js/pages/crud/forms/widgets/bootstrap-datepicker.min.js')}}"></script>
 @endpush
 

@@ -525,7 +525,9 @@ id/json-ld-jobPosting-schema-generator
 </script>
 @endpush
 @push('script')
-<script src="{{asset('js/logic/jobPosting-json.js')}}"></script>
+{{-- <script src="{{asset('js/logic/jobPosting-json.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/tools/jobPosting-json.js') }}"></script>
 <script src="{{asset('js/pages/crud/forms/widgets/bootstrap-datepicker.min.js')}}"></script>
 @endpush
 @section('json-ld')

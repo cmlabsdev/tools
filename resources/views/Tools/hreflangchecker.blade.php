@@ -45,7 +45,7 @@ id/hreflang-checker
                         <input type="url" class="form-control hreflang-url" name="" value="" placeholder="http://example.com" id="input-url" autocomplete="off">
                     </div>
                     <div class="col-sm-3 col-md-2 col-lg-3 col-xl-2 d-flex justify-content-end py-1">
-                        <button id="check-btn" type="button" class="btn btn-crawl" name="button">@lang('hreflang.check-btn')</button>
+                        <button id="analyze-btn" type="button" class="btn btn-crawl" name="button">@lang('hreflang.check-btn')</button>
                     </div>
                 </div>
             </div>
@@ -310,21 +310,10 @@ id/hreflang-checker
 <script type="text/javascript">
     const HREFLANG_API_URL = '{{ route('api.analyze-hreflang') }}';
     $('#toggle_button_webmaster').click();
-    $('a[href*="#"]:not([href="#"])').click(function() {
-        var offset = -80;
-        if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
-            var target = $(this.hash);
-            target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-            if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top + offset
-                }, 400);
-                return false;
-            }
-        }
-    });
 </script>
-<script src="{{ asset('js/logic/hreflang-checker.js') }}"></script>
+{{-- <script src="{{ asset('js/logic/hreflang-checker.js') }}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/tools/hreflang-checker.js') }}"></script>
 <script>
     getHistories();
 </script>

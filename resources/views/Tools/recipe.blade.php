@@ -488,7 +488,9 @@ id/json-ld-recipe-schema-generator
 @endpush
 
 @push('script')
-<script src="{{asset('js/logic/recipe-json.js')}}"></script>
+{{-- <script src="{{asset('js/logic/recipe-json.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js')}} "></script>
+<script src="{{ mix('js/app/tools/recipe-json.js') }}"></script>
 <script src="{{asset('js/pages/crud/forms/widgets/bootstrap-datepicker.min.js')}}"></script>
 @endpush
 

@@ -109,6 +109,7 @@ module.exports = __webpack_require__(/*! ./lib/axios */ "./node_modules/axios/li
 
 var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
 var settle = __webpack_require__(/*! ./../core/settle */ "./node_modules/axios/lib/core/settle.js");
+var cookies = __webpack_require__(/*! ./../helpers/cookies */ "./node_modules/axios/lib/helpers/cookies.js");
 var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
 var buildFullPath = __webpack_require__(/*! ../core/buildFullPath */ "./node_modules/axios/lib/core/buildFullPath.js");
 var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ "./node_modules/axios/lib/helpers/parseHeaders.js");
@@ -129,7 +130,7 @@ module.exports = function xhrAdapter(config) {
     // HTTP basic authentication
     if (config.auth) {
       var username = config.auth.username || '';
-      var password = config.auth.password || '';
+      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
       requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
     }
 
@@ -210,8 +211,6 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(/*! ./../helpers/cookies */ "./node_modules/axios/lib/helpers/cookies.js");
-
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
         cookies.read(config.xsrfCookieName) :
@@ -277,7 +276,7 @@ module.exports = function xhrAdapter(config) {
       });
     }
 
-    if (requestData === undefined) {
+    if (!requestData) {
       requestData = null;
     }
 
@@ -345,6 +344,9 @@ axios.all = function all(promises) {
   return Promise.all(promises);
 };
 axios.spread = __webpack_require__(/*! ./helpers/spread */ "./node_modules/axios/lib/helpers/spread.js");
+
+// Expose isAxiosError
+axios.isAxiosError = __webpack_require__(/*! ./helpers/isAxiosError */ "./node_modules/axios/lib/helpers/isAxiosError.js");
 
 module.exports = axios;
 
@@ -554,9 +556,10 @@ Axios.prototype.getUri = function getUri(config) {
 utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
   /*eslint func-names:0*/
   Axios.prototype[method] = function(url, config) {
-    return this.request(utils.merge(config || {}, {
+    return this.request(mergeConfig(config || {}, {
       method: method,
-      url: url
+      url: url,
+      data: (config || {}).data
     }));
   };
 });
@@ -564,7 +567,7 @@ utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData
 utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
   /*eslint func-names:0*/
   Axios.prototype[method] = function(url, data, config) {
-    return this.request(utils.merge(config || {}, {
+    return this.request(mergeConfig(config || {}, {
       method: method,
       url: url,
       data: data
@@ -824,7 +827,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   error.response = response;
   error.isAxiosError = true;
 
-  error.toJSON = function() {
+  error.toJSON = function toJSON() {
     return {
       // Standard
       message: this.message,
@@ -873,59 +876,73 @@ module.exports = function mergeConfig(config1, config2) {
   config2 = config2 || {};
   var config = {};
 
-  var valueFromConfig2Keys = ['url', 'method', 'params', 'data'];
-  var mergeDeepPropertiesKeys = ['headers', 'auth', 'proxy'];
+  var valueFromConfig2Keys = ['url', 'method', 'data'];
+  var mergeDeepPropertiesKeys = ['headers', 'auth', 'proxy', 'params'];
   var defaultToConfig2Keys = [
-    'baseURL', 'url', 'transformRequest', 'transformResponse', 'paramsSerializer',
-    'timeout', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
-    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress',
-    'maxContentLength', 'validateStatus', 'maxRedirects', 'httpAgent',
-    'httpsAgent', 'cancelToken', 'socketPath'
+    'baseURL', 'transformRequest', 'transformResponse', 'paramsSerializer',
+    'timeout', 'timeoutMessage', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
+    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'decompress',
+    'maxContentLength', 'maxBodyLength', 'maxRedirects', 'transport', 'httpAgent',
+    'httpsAgent', 'cancelToken', 'socketPath', 'responseEncoding'
   ];
+  var directMergeKeys = ['validateStatus'];
+
+  function getMergedValue(target, source) {
+    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
+      return utils.merge(target, source);
+    } else if (utils.isPlainObject(source)) {
+      return utils.merge({}, source);
+    } else if (utils.isArray(source)) {
+      return source.slice();
+    }
+    return source;
+  }
+
+  function mergeDeepProperties(prop) {
+    if (!utils.isUndefined(config2[prop])) {
+      config[prop] = getMergedValue(config1[prop], config2[prop]);
+    } else if (!utils.isUndefined(config1[prop])) {
+      config[prop] = getMergedValue(undefined, config1[prop]);
+    }
+  }
 
   utils.forEach(valueFromConfig2Keys, function valueFromConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
+    if (!utils.isUndefined(config2[prop])) {
+      config[prop] = getMergedValue(undefined, config2[prop]);
     }
   });
 
-  utils.forEach(mergeDeepPropertiesKeys, function mergeDeepProperties(prop) {
-    if (utils.isObject(config2[prop])) {
-      config[prop] = utils.deepMerge(config1[prop], config2[prop]);
-    } else if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (utils.isObject(config1[prop])) {
-      config[prop] = utils.deepMerge(config1[prop]);
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
-    }
-  });
+  utils.forEach(mergeDeepPropertiesKeys, mergeDeepProperties);
 
   utils.forEach(defaultToConfig2Keys, function defaultToConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
+    if (!utils.isUndefined(config2[prop])) {
+      config[prop] = getMergedValue(undefined, config2[prop]);
+    } else if (!utils.isUndefined(config1[prop])) {
+      config[prop] = getMergedValue(undefined, config1[prop]);
+    }
+  });
+
+  utils.forEach(directMergeKeys, function merge(prop) {
+    if (prop in config2) {
+      config[prop] = getMergedValue(config1[prop], config2[prop]);
+    } else if (prop in config1) {
+      config[prop] = getMergedValue(undefined, config1[prop]);
     }
   });
 
   var axiosKeys = valueFromConfig2Keys
     .concat(mergeDeepPropertiesKeys)
-    .concat(defaultToConfig2Keys);
+    .concat(defaultToConfig2Keys)
+    .concat(directMergeKeys);
 
   var otherKeys = Object
-    .keys(config2)
+    .keys(config1)
+    .concat(Object.keys(config2))
     .filter(function filterAxiosKeys(key) {
       return axiosKeys.indexOf(key) === -1;
     });
 
-  utils.forEach(otherKeys, function otherKeysDefaultToConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
-    }
-  });
+  utils.forEach(otherKeys, mergeDeepProperties);
 
   return config;
 };
@@ -954,7 +971,7 @@ var createError = __webpack_require__(/*! ./createError */ "./node_modules/axios
  */
 module.exports = function settle(resolve, reject, response) {
   var validateStatus = response.config.validateStatus;
-  if (!validateStatus || validateStatus(response.status)) {
+  if (!response.status || !validateStatus || validateStatus(response.status)) {
     resolve(response);
   } else {
     reject(createError(
@@ -1086,6 +1103,7 @@ var defaults = {
   xsrfHeaderName: 'X-XSRF-TOKEN',
 
   maxContentLength: -1,
+  maxBodyLength: -1,
 
   validateStatus: function validateStatus(status) {
     return status >= 200 && status < 300;
@@ -1149,7 +1167,6 @@ var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/util
 
 function encode(val) {
   return encodeURIComponent(val).
-    replace(/%40/gi, '@').
     replace(/%3A/gi, ':').
     replace(/%24/g, '$').
     replace(/%2C/gi, ',').
@@ -1330,6 +1347,29 @@ module.exports = function isAbsoluteURL(url) {
   // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
   // by any combination of letters, digits, plus, period, or hyphen.
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/axios/lib/helpers/isAxiosError.js":
+/*!********************************************************!*\
+  !*** ./node_modules/axios/lib/helpers/isAxiosError.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Determines whether the payload is an error thrown by Axios
+ *
+ * @param {*} payload The value to test
+ * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
+ */
+module.exports = function isAxiosError(payload) {
+  return (typeof payload === 'object') && (payload.isAxiosError === true);
 };
 
 
@@ -1659,6 +1699,21 @@ function isObject(val) {
 }
 
 /**
+ * Determine if a value is a plain Object
+ *
+ * @param {Object} val The value to test
+ * @return {boolean} True if value is a plain Object, otherwise false
+ */
+function isPlainObject(val) {
+  if (toString.call(val) !== '[object Object]') {
+    return false;
+  }
+
+  var prototype = Object.getPrototypeOf(val);
+  return prototype === null || prototype === Object.prototype;
+}
+
+/**
  * Determine if a value is a Date
  *
  * @param {Object} val The value to test
@@ -1814,34 +1869,12 @@ function forEach(obj, fn) {
 function merge(/* obj1, obj2, obj3, ... */) {
   var result = {};
   function assignValue(val, key) {
-    if (typeof result[key] === 'object' && typeof val === 'object') {
+    if (isPlainObject(result[key]) && isPlainObject(val)) {
       result[key] = merge(result[key], val);
-    } else {
-      result[key] = val;
-    }
-  }
-
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    forEach(arguments[i], assignValue);
-  }
-  return result;
-}
-
-/**
- * Function equal to merge with the difference being that no reference
- * to original objects is kept.
- *
- * @see merge
- * @param {Object} obj1 Object to merge
- * @returns {Object} Result of all merge properties
- */
-function deepMerge(/* obj1, obj2, obj3, ... */) {
-  var result = {};
-  function assignValue(val, key) {
-    if (typeof result[key] === 'object' && typeof val === 'object') {
-      result[key] = deepMerge(result[key], val);
-    } else if (typeof val === 'object') {
-      result[key] = deepMerge({}, val);
+    } else if (isPlainObject(val)) {
+      result[key] = merge({}, val);
+    } else if (isArray(val)) {
+      result[key] = val.slice();
     } else {
       result[key] = val;
     }
@@ -1872,6 +1905,19 @@ function extend(a, b, thisArg) {
   return a;
 }
 
+/**
+ * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
+ *
+ * @param {string} content with BOM
+ * @return {string} content value without BOM
+ */
+function stripBOM(content) {
+  if (content.charCodeAt(0) === 0xFEFF) {
+    content = content.slice(1);
+  }
+  return content;
+}
+
 module.exports = {
   isArray: isArray,
   isArrayBuffer: isArrayBuffer,
@@ -1881,6 +1927,7 @@ module.exports = {
   isString: isString,
   isNumber: isNumber,
   isObject: isObject,
+  isPlainObject: isPlainObject,
   isUndefined: isUndefined,
   isDate: isDate,
   isFile: isFile,
@@ -1891,9 +1938,9 @@ module.exports = {
   isStandardBrowserEnv: isStandardBrowserEnv,
   forEach: forEach,
   merge: merge,
-  deepMerge: deepMerge,
   extend: extend,
-  trim: trim
+  trim: trim,
+  stripBOM: stripBOM
 };
 
 
@@ -1920,14 +1967,15 @@ module.exports = {
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.19';
+  var VERSION = '4.17.21';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
 
   /** Error message constants. */
   var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
-      FUNC_ERROR_TEXT = 'Expected a function';
+      FUNC_ERROR_TEXT = 'Expected a function',
+      INVALID_TEMPL_VAR_ERROR_TEXT = 'Invalid `variable` option passed into `_.template`';
 
   /** Used to stand-in for `undefined` hash values. */
   var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -2060,10 +2108,11 @@ module.exports = {
   var reRegExpChar = /[\\^$.*+?()[\]{}|]/g,
       reHasRegExpChar = RegExp(reRegExpChar.source);
 
-  /** Used to match leading and trailing whitespace. */
-  var reTrim = /^\s+|\s+$/g,
-      reTrimStart = /^\s+/,
-      reTrimEnd = /\s+$/;
+  /** Used to match leading whitespace. */
+  var reTrimStart = /^\s+/;
+
+  /** Used to match a single whitespace character. */
+  var reWhitespace = /\s/;
 
   /** Used to match wrap detail comments. */
   var reWrapComment = /\{(?:\n\/\* \[wrapped with .+\] \*\/)?\n?/,
@@ -2072,6 +2121,18 @@ module.exports = {
 
   /** Used to match words composed of alphanumeric characters. */
   var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+
+  /**
+   * Used to validate the `validate` option in `_.template` variable.
+   *
+   * Forbids characters which could potentially change the meaning of the function argument definition:
+   * - "()," (modification of function parameters)
+   * - "=" (default value)
+   * - "[]{}" (destructuring of function parameters)
+   * - "/" (beginning of a comment)
+   * - whitespace
+   */
+  var reForbiddenIdentifierChars = /[()=,{}\[\]\/\s]/;
 
   /** Used to match backslashes in property paths. */
   var reEscapeChar = /\\(\\)?/g;
@@ -2902,6 +2963,19 @@ module.exports = {
   }
 
   /**
+   * The base implementation of `_.trim`.
+   *
+   * @private
+   * @param {string} string The string to trim.
+   * @returns {string} Returns the trimmed string.
+   */
+  function baseTrim(string) {
+    return string
+      ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
+      : string;
+  }
+
+  /**
    * The base implementation of `_.unary` without support for storing metadata.
    *
    * @private
@@ -3232,6 +3306,21 @@ module.exports = {
     return hasUnicode(string)
       ? unicodeToArray(string)
       : asciiToArray(string);
+  }
+
+  /**
+   * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+   * character of `string`.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {number} Returns the index of the last non-whitespace character.
+   */
+  function trimmedEndIndex(string) {
+    var index = string.length;
+
+    while (index-- && reWhitespace.test(string.charAt(index))) {}
+    return index;
   }
 
   /**
@@ -14402,7 +14491,7 @@ module.exports = {
       if (typeof value != 'string') {
         return value === 0 ? value : +value;
       }
-      value = value.replace(reTrim, '');
+      value = baseTrim(value);
       var isBinary = reIsBinary.test(value);
       return (isBinary || reIsOctal.test(value))
         ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
@@ -16774,6 +16863,12 @@ module.exports = {
       if (!variable) {
         source = 'with (obj) {\n' + source + '\n}\n';
       }
+      // Throw an error if a forbidden character was found in `variable`, to prevent
+      // potential command injection attacks.
+      else if (reForbiddenIdentifierChars.test(variable)) {
+        throw new Error(INVALID_TEMPL_VAR_ERROR_TEXT);
+      }
+
       // Cleanup code by stripping empty strings.
       source = (isEvaluating ? source.replace(reEmptyStringLeading, '') : source)
         .replace(reEmptyStringMiddle, '$1')
@@ -16887,7 +16982,7 @@ module.exports = {
     function trim(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrim, '');
+        return baseTrim(string);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -16922,7 +17017,7 @@ module.exports = {
     function trimEnd(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrimEnd, '');
+        return string.slice(0, trimmedEndIndex(string) + 1);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -17496,7 +17591,7 @@ module.exports = {
      * // => [{ 'a': 4, 'b': 5, 'c': 6 }]
      *
      * // Checking for several possible values
-     * _.filter(users, _.overSome([_.matches({ 'a': 1 }), _.matches({ 'a': 4 })]));
+     * _.filter(objects, _.overSome([_.matches({ 'a': 1 }), _.matches({ 'a': 4 })]));
      * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matches(source) {
@@ -17533,7 +17628,7 @@ module.exports = {
      * // => { 'a': 4, 'b': 5, 'c': 6 }
      *
      * // Checking for several possible values
-     * _.filter(users, _.overSome([_.matchesProperty('a', 1), _.matchesProperty('a', 4)]));
+     * _.filter(objects, _.overSome([_.matchesProperty('a', 1), _.matchesProperty('a', 4)]));
      * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matchesProperty(path, srcValue) {
@@ -19332,6 +19427,8 @@ module.exports = function(module) {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+__webpack_require__(/*! ./custom.js */ "./resources/js/custom.js");
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -19366,6 +19463,468 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/custom.js":
+/*!********************************!*\
+  !*** ./resources/js/custom.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// Init var
+var insightSlide = document.getElementById('insight-slide'),
+    insightopts = {
+  type: 'loop',
+  arrows: false,
+  pagination: false,
+  perPage: 3,
+  drag: false,
+  perMove: 1,
+  autoplay: true,
+  breakpoints: {
+    992: {
+      perPage: 3
+    },
+    768: {
+      perPage: 2,
+      drag: true,
+      autoplay: true
+    },
+    520: {
+      perPage: 1,
+      drag: true,
+      autoplay: true
+    }
+  }
+};
+$(document).ready(function () {
+  // Header Info Slider
+  $('.custom-slide-header').removeClass('d-none');
+  $('.slick-navbar').slick({
+    vertical: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    fade: false,
+    autoplay: true,
+    autoplaySpeed: 3000
+  });
+  $('#nav-desc-tab-1').click(function () {
+    $('#nav-label-tab-1').addClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeIn().removeClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-2').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').addClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeIn().removeClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-3').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').addClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeIn().removeClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-4').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').addClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeIn().removeClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-5').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').addClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeIn().removeClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-6').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').addClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeIn().removeClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-7').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').addClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeIn().removeClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-8').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').addClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeIn().removeClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-9').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').addClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeIn().removeClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-10').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').addClass("active");
+    $('#nav-label-tab-11').removeClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeIn().removeClass("d-none");
+    $('#description-tab-11').fadeOut().addClass("d-none");
+  });
+  $('#nav-desc-tab-11').click(function () {
+    $('#nav-label-tab-1').removeClass("active");
+    $('#nav-label-tab-2').removeClass("active");
+    $('#nav-label-tab-3').removeClass("active");
+    $('#nav-label-tab-4').removeClass("active");
+    $('#nav-label-tab-5').removeClass("active");
+    $('#nav-label-tab-6').removeClass("active");
+    $('#nav-label-tab-7').removeClass("active");
+    $('#nav-label-tab-8').removeClass("active");
+    $('#nav-label-tab-9').removeClass("active");
+    $('#nav-label-tab-10').removeClass("active");
+    $('#nav-label-tab-11').addClass("active");
+    $('#description-tab-1').fadeOut().addClass("d-none");
+    $('#description-tab-2').fadeOut().addClass("d-none");
+    $('#description-tab-3').fadeOut().addClass("d-none");
+    $('#description-tab-4').fadeOut().addClass("d-none");
+    $('#description-tab-5').fadeOut().addClass("d-none");
+    $('#description-tab-6').fadeOut().addClass("d-none");
+    $('#description-tab-7').fadeOut().addClass("d-none");
+    $('#description-tab-8').fadeOut().addClass("d-none");
+    $('#description-tab-9').fadeOut().addClass("d-none");
+    $('#description-tab-10').fadeOut().addClass("d-none");
+    $('#description-tab-11').fadeIn().removeClass("d-none");
+  }); // Get data for insight slider with ajax
+  // $.ajax({
+  //     url: '/blog/data',
+  //     header: {
+  //         "Access-Control-Allow-Origin": "*",
+  //     },
+  //     type: 'GET',
+  //     cache: false,
+  //     dataType: 'json',
+  //     success: function (dataResult) {
+  //         // console.log(dataResult)
+  //         // var dataDesktop = ''
+  //         var dataSlide = ''
+  //         $.each(dataResult, function (index, data) {
+  //             var content = data.content.rendered
+  //             content = content.replace('<span style="font-weight: 400;">', '')
+  //             content = content.replace('<span style="font-weight: 400;" >', '')
+  //             content = content.replace('<span style="font-weight: 400;"  >', '')
+  //             content = content.replace('</span>', '')
+  //             content = content.replace('[vc_row][vc_column][vc_column_text]', '')
+  //             content = content.replace('<p>', '')
+  //             content = content.replace('</p>', '')
+  //             content = content.replace('<i>', '')
+  //             content = content.replace('</i>', '')
+  //             var newString = content
+  //             var maxLength = 150
+  //             var trimmedString = newString.substr(0, maxLength);
+  //             if(newString.length > trimmedString.length){
+  //                 trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")))
+  //             }
+  //             var blogdate = new Date(data.date)
+  //             let formattedDate = blogdate.getDate() + "/" + (blogdate.getMonth() + 1) + "/" + blogdate.getFullYear()
+  //             dataSlide += '<li class="splide__slide">'
+  //             dataSlide += '<a href="' +data.link+ '">'
+  //             dataSlide += '<div class="card card-custom card-stretch card-insight mr-3 ml-3"><div class="card-body pt-8 pl-5 pr-5 pb-5">'
+  //             dataSlide += '<span class="h6 font-weight-bolder">' +data.title.rendered+ '</span>'
+  //             dataSlide += '<p class="mt-3 font-weight-light">' +trimmedString+ ' ...</p></div>'
+  //             dataSlide += '<div class="card-footer pt-0 pl-5 pr-5 pb-5 d-flex justify-content-start align-items-center border-0">'
+  //             dataSlide += '<span>Posted on ' +formattedDate+ '</span>'
+  //             dataSlide += '</div>'
+  //             dataSlide += '</div>'
+  //             dataSlide += '</a>'
+  //             dataSlide += '</li>'
+  //         })
+  //         insightSlide.innerHTML = dataSlide
+  //         new Splide( '.splide-insight', insightopts).mount();
+  //     }
+  // })
+}); // Custom Show Hide Tools Title and Menu
+
+$('#toggle_button_writer').click(function () {
+  $('#header_writer_title').removeClass('d-none');
+  $('#headermobile_writer_title').removeClass('d-none');
+  $('#asidemobile_writer_title').removeClass('d-none');
+  $('#toggle_button_webmaster').removeClass('d-none');
+  $('#togglemobile_button_webmaster').removeClass('d-none');
+  $('#menu_tools_writer').removeClass('d-none');
+  $('#mobilemenu_tools_writer').removeClass('d-none');
+  $('#header_webmaster_title').addClass('d-none');
+  $('#headermobile_webmaster_title').addClass('d-none');
+  $('#asidemobile_webmaster_title').addClass('d-none');
+  $('#toggle_button_writer').addClass('d-none');
+  $('#togglemobile_button_writer').addClass('d-none');
+  $('#menu_tools_webmaster').addClass('d-none');
+  $('#mobilemenu_tools_webmaster').addClass('d-none');
+});
+$('#toggle_button_webmaster').click(function () {
+  $('#header_writer_title').addClass('d-none');
+  $('#headermobile_writer_title').addClass('d-none');
+  $('#asidemobile_writer_title').addClass('d-none');
+  $('#toggle_button_webmaster').addClass('d-none');
+  $('#togglemobile_button_webmaster').addClass('d-none');
+  $('#menu_tools_writer').addClass('d-none');
+  $('#mobilemenu_tools_writer').addClass('d-none');
+  $('#header_webmaster_title').removeClass('d-none');
+  $('#headermobile_webmaster_title').removeClass('d-none');
+  $('#asidemobile_webmaster_title').removeClass('d-none');
+  $('#toggle_button_writer').removeClass('d-none');
+  $('#togglemobile_button_writer').removeClass('d-none');
+  $('#menu_tools_webmaster').removeClass('d-none');
+  $('#mobilemenu_tools_webmaster').removeClass('d-none');
+});
+$('#togglemobile_button_writer').click(function () {
+  $('#header_writer_title').removeClass('d-none');
+  $('#headermobile_writer_title').removeClass('d-none');
+  $('#asidemobile_writer_title').removeClass('d-none');
+  $('#toggle_button_webmaster').removeClass('d-none');
+  $('#togglemobile_button_webmaster').removeClass('d-none');
+  $('#menu_tools_writer').removeClass('d-none');
+  $('#mobilemenu_tools_writer').removeClass('d-none');
+  $('#header_webmaster_title').addClass('d-none');
+  $('#headermobile_webmaster_title').addClass('d-none');
+  $('#asidemobile_webmaster_title').addClass('d-none');
+  $('#toggle_button_writer').addClass('d-none');
+  $('#togglemobile_button_writer').addClass('d-none');
+  $('#menu_tools_webmaster').addClass('d-none');
+  $('#mobilemenu_tools_webmaster').addClass('d-none');
+});
+$('#togglemobile_button_webmaster').click(function () {
+  $('#header_writer_title').addClass('d-none');
+  $('#headermobile_writer_title').addClass('d-none');
+  $('#asidemobile_writer_title').addClass('d-none');
+  $('#toggle_button_webmaster').addClass('d-none');
+  $('#togglemobile_button_webmaster').addClass('d-none');
+  $('#menu_tools_writer').addClass('d-none');
+  $('#mobilemenu_tools_writer').addClass('d-none');
+  $('#header_webmaster_title').removeClass('d-none');
+  $('#headermobile_webmaster_title').removeClass('d-none');
+  $('#asidemobile_webmaster_title').removeClass('d-none');
+  $('#toggle_button_writer').removeClass('d-none');
+  $('#togglemobile_button_writer').removeClass('d-none');
+  $('#menu_tools_webmaster').removeClass('d-none');
+  $('#mobilemenu_tools_webmaster').removeClass('d-none');
+}); // Window scroll setting for header and subehader
+
+var prevScrollpos = window.pageYOffset;
+
+window.onscroll = function () {
+  var currentScrollPos = window.pageYOffset;
+
+  if (prevScrollpos >= currentScrollPos) {
+    // document.getElementById('kt_header_mobile').style.top = "0";
+    // document.getElementById('kt_subheader_mobile').style.top = "55px";
+    // $('#subheader_logo_mobile').addClass('d-none');
+    document.getElementById('kt_header').style.top = "0";
+    document.getElementById('kt_subheader').style.top = "64px";
+    $('#subheader_logo').addClass('d-none');
+  } else {
+    document.getElementById('kt_header').style.top = "-64px";
+    document.getElementById('kt_subheader').style.top = "0";
+    $('#subheader_logo').removeClass('d-none'); // document.getElementById('kt_header_mobile').style.top = "-54px";
+    // document.getElementById('kt_subheader_mobile').style.top = "0";
+    // $('#subheader_logo_mobile').removeClass('d-none');
+  }
+};
+
+var showCTA = false;
+
+function showCTAForm() {
+  showCTA = !showCTA;
+
+  if (showCTA) {
+    $("#cta-danger .cta-border").removeClass("cta-border-bottom");
+  } else {
+    $("#cta-danger .cta-border").addClass("cta-border-bottom");
+  }
+}
+
+function openPricing() {
+  window.open('https://cmlabs.co/en-id/pricing/seo-consultant', '_blank');
+}
+
+/***/ }),
+
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -19384,8 +19943,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/sherary/Documents/Work/tools/tools/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/sherary/Documents/Work/tools/tools/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Projects\tools\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Projects\tools\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

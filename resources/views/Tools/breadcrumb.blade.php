@@ -433,8 +433,11 @@ id/json-ld-breadcrumb-schema-generator
 </script>
 @endpush
 @push('script')
-<script src="{{asset('js/logic/predifine-localstorage.js')}}"></script>
-<script src="{{asset('js/logic/breadcrumb-json.js')}}"></script>
+{{-- <script src="{{asset('js/logic/predifine-localstorage.js')}}"></script> --}}
+{{-- <script src="{{asset('js/logic/breadcrumb-json.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/helper.js') }}"></script>
+<script src="{{ mix('js/app/tools/breadcrumb-json.js') }}"></script>
 <script type="text/javascript">
     $('#toggle_button_webmaster').click();
 </script>

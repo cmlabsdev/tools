@@ -117,7 +117,7 @@ id/keyword-permutation
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <p class="mb-0 text-black mr-2"><strong>@lang('permutation.permutation-result')</strong></p>
-                                        <small id="copy-text" class="mb-0 mx-2 text-darkgrey text-hover-underline">@lang('permutation.copy-btn')</small>
+                                        <small id="copy" class="mb-0 mx-2 text-darkgrey text-hover-underline">@lang('permutation.copy-btn')</small>
                                         <small id="reset" class="mb-0 mx-2 text-darkgrey text-hover-underline">@lang('permutation.clear-btn')</small>
                                     </div>
                                     <div class="d-flex justify-content-between">
@@ -127,7 +127,7 @@ id/keyword-permutation
                                 </div>
                             </div>
                             <hr class="mb-0">
-                            <textarea id="permutation-textarea-result" readonly data-autoresize name="name" placeholder="{{ Lang::get('permutation.textarea-result-placeholder') }}" rows="25" style="resize:none;" class="form-control keyword-permutation-text__area"></textarea>
+                            <textarea id="json-format" readonly data-autoresize name="name" placeholder="{{ Lang::get('permutation.textarea-result-placeholder') }}" rows="25" style="resize:none;" class="form-control keyword-permutation-text__area"></textarea>
                         </div>
                     </div>
                 </div>
@@ -275,7 +275,9 @@ id/keyword-permutation
 @endsection
 
 @push('script')
-<script src="{{asset('/js/logic/keyword-permutation.js')}}"></script>
+{{-- <script src="{{asset('/js/logic/keyword-permutation.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/tools/keyword-permutation.js') }}"></script>
 <script type="text/javascript">
     $('#toggle_button_webmaster').click();
 </script>

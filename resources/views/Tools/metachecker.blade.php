@@ -602,8 +602,11 @@
     <script>
         const META_CHECKER_URL = '{{route('api.analyze-meta')}}'
     </script>
-    <script src="{{asset('js/logic/predifine-localstorage.js')}}"></script>
-    <script src="{{asset('js/logic/metachecker.js')}}"></script>
+    {{-- <script src="{{asset('js/logic/predifine-localstorage.js')}}"></script> --}}
+    {{-- <script src="{{ asset('js/logic/metachecker.js') }}"></script> --}}
+    <script src="{{ mix('js/app/general.js') }}"></script>
+    <script src="{{ mix('js/app/helper.js') }}"></script>
+    <script src="{{ mix('js/app/tools/metachecker.js') }}"></script>
     <script type="text/javascript">
         $('#toggle_button_writer').click();
     </script>

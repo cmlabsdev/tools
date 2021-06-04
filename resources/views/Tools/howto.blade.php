@@ -568,8 +568,11 @@ id/json-ld-how-to-schema-generator
 </script>
 @endpush
 @push('script')
-<script src="{{asset('js/logic/predifine-localstorage.js')}}"></script>
-<script src="{{asset('js/logic/howto-json.js')}}"></script>
+{{-- <script src="{{asset('js/logic/predifine-localstorage.js')}}"></script> --}}
+{{-- <script src="{{asset('js/logic/howto-json.js')}}"></script> --}}
+<script src="{{ mix('js/app/general.js') }}"></script>
+<script src="{{ mix('js/app/helper.js') }}"></script>
+<script src="{{ mix('js/app/tools/howto-json.js') }}"></script>
 @endpush
 
 @section('json-ld')
